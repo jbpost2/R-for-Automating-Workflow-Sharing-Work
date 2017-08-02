@@ -1,0 +1,410 @@
+---
+title: "Intermediate Programming in R Part I"
+author: "Justin Post"
+date: "August 10-11, 2017"
+output:       
+      ioslides_presentation:
+         css: css/style.css
+transition: faster
+logo: img/logo.png
+---
+
+
+```{r,echo=FALSE}
+options(dplyr.print_min = 5)
+```
+
+## Course Schedule  
+
+**Daily agenda:**   
+
+- 10-11:10 Session  
+- 10-minute break  
+- 11:20-12:30 Session  
+- 12:30-1:45 Lunch  
+- 1:45-2:55 Session  
+- 10-minute break  
+- 3:05-4:15 Session  
+
+
+## What do we want to be able to do?
+
+- Communicate findings effectively 
+
+- Encompass and document entire data analysis process
+
+- Document findings 
+
+- Make process reproducible  
+
+- Share process
+
+
+
+## Where do we start?  
+
+- Review of Key Concepts  
+
+- R Markdown Basics  
+    + Code Chunks
+    + Images/Equations/Misc.
+
+- R Markdown Output types
+    + Documents: PDF, HTML 
+    + Presentations: Slides
+    
+- Interactive Components
+
+- R Shiny Applications/Presentations
+
+
+## Review of Concepts
+**R Studio**
+
+- Great integrated development environment (IDE)  
+
+- Four main 'areas' we'll use  
+    + Scripting and Viewing Area  
+    + Workspace/History  
+    + Files/Plots/Help  
+    + Console
+    
+
+## Review of Concepts
+**R Studio** - Can rearrange panes
+
+```{r, out.width = "800px",echo=FALSE}
+knitr::include_graphics("img/panes.png")
+```
+
+- Global options --> Appearance allows font/background changes
+
+
+## Review of Concepts
+**R Studio** - Project
+
+> - Often have many files associated with each analysis  
+
+> - Keeping different undertakings separate can be difficult!
+
+> - Can use "Projet" feature in R Studio  
+
+> - Provide straightforward to divide your work into multiple contexts.  Each with their own:    
+    <ul>  
+      <li> Working directory</li>
+      <li> Workspace</li>  
+      <li> History</li>  
+      <li> Source documents</li>  
+    </ul>
+
+
+## Review of Concepts
+**R Studio** - Project
+
+- Easy to create!  
+
+```{r, out.width = "600px",echo=FALSE}
+knitr::include_graphics("img/project.png")
+```
+
+- Can save workspace, etc. and pick up right where you left off!  
+- Work on multiple projects at once  
+
+
+## Review of Concepts  
+**Data Frames**
+
+- Best R object for data sets
+- Collection (list) of vectors of the same **length**
+- Consider the built in `iris` data set
+
+```{r}
+iris<-tbl_df(iris); iris
+```
+
+## Review of Concepts
+**Data Frames**  
+
+- Accessing elements: multiple ways
+
+```{r}
+iris[1:4, 2:4]
+```
+
+
+## Review of Concepts
+**Data Frames**  
+
+- Accessing elements: multiple ways
+
+```{r}
+iris[1, ]
+```
+
+
+## Review of Concepts
+**Data Frames**  
+
+- Accessing elements: multiple ways
+
+```{r}
+iris[ , c("Sepal.Length", "Species")]
+```
+
+
+## Review of Concepts
+**Data Frames**  
+
+- Accessing elements: multiple ways
+
+```{r}
+iris$Sepal.Length
+```
+
+## Review of Concepts  
+**Packages**
+- Many ways to accomplish the same thing in R
+
+> - How to choose?  
+     <ul>
+       <li>Want 'fast' code</li>
+       <li>Want 'easy' syntax</li>  
+       <li>Good default settings on functions</li>  
+     </ul>
+     
+> - Base R has reasonable defaults and syntax but functions are slow  
+
+> - "[TidyVerse](http://tidyverse.org/)" - collection of R packages that share common philosophies and are designed to work together!  
+    <ul>
+      <li>Very efficient code</li>
+      <li>Common syntax</li>  
+    </ul>
+
+
+## Review of Concepts  
+
+- If not installed (downloaded) on computer
+
+```{r,eval=FALSE}
+install.packages("tidyverse")
+```
+
+
+## Review of Concepts  
+
+- Once installed, `library()` or `require()` to load
+```{r}
+library(tidyverse)
+```    
+
+
+## Tidyverse Syntax
+
+- Reason to prefer `dplyr` and packages from the `tidyverse` 
+
+> - Fast!
+
+> - Good defaults
+
+> - All packages have similar syntax!  All work on `tibbles` (data frames)  
+
+> - Convert any data frame (or matrix) to a tibble using `tbl_df()`
+
+> - Syntax: function(data.frame, options)
+
+
+## Review of Concepts  
+**Piping or Chaining**
+
+- Applying multiple functions: nesting hard to parse!
+- Piping or Chaining with %>% operator helps
+- If `dplyr` or `magrittr` package loaded, can use anywhere
+```{r}
+a<-runif(n = 10)
+a
+```
+
+## Review of Concepts
+**Piping or Chaining**
+
+```{r}
+#silly example
+a %>% quantile()
+a %>% quantile() %>% range()
+```
+
+## Review of Concepts
+**Piping or Chaining**
+
+- Applying multiple functions: nesting hard to parse!
+- Piping or Chaining with `%>%` operator helps
+
+```{r}
+library(Lahman) #Install if needed!
+Batting<-tbl_df(Batting) 
+arrange(filter(Batting, teamID == "PIT"), desc(G))
+```
+
+## Review of Concept  
+**Piping or Chaining**
+
+- Applying multiple functions: nesting hard to parse!
+- Piping or Chaining with `%>%` operator helps
+
+```{r}
+Batting %>% filter(teamID == "PIT") %>% arrange(desc(G))
+```
+
+
+## What do we want to be able to do?
+
+- **Communicate findings effectively** 
+
+- **Encompass and document entire data analysis process**
+
+- Document findings 
+
+- Make reproducible process  
+
+- Share process
+
+
+
+So far, you’ve learned the tools to get your data into R, tidy it into a form convenient for analysis, and then understand your data through transformation, visualisation and modelling. However, it doesn’t matter how great your analysis is unless you can explain it to others: you need to communicate your results.
+
+
+## R Markdown Basics  
+**What is Markdown?**  
+
+- Formatting syntax for authoring HTML, PDF, slide shows, books, and more
+
+- Document easily embeds R (and other) code
+
+- Can do interactive documents as well!
+
+- Designed to be used in three ways (R for Data Science)
+    + Communicating to decision makers, who want to focus on the conclusions, not the code behind the analysis.
+    + Collaborating with other data scientists (including future you!), who are interested in both your conclusions, and how you reached them (i.e. the code).
+    + As an environment in which to do data science, as a modern day lab notebook where you can capture not only what you did, but also what you were thinking.
+
+
+## R Markdown Basics
+
+<iframe width="560" height="315" src="video/Markdown.mp4" frameborder="0" allowfullscreen></iframe>
+
+
+## R Markdown Basics
+
+More here about simple text writing
+Markup vs markdown ideas
+text vs .mD
+
+## R Markdown Basics
+**Creating an R Markdown Document**
+
+- R Studio makes it easy!  
+
+```{r, out.width = "700px",echo=FALSE}
+knitr::include_graphics("img/startMD.png")
+```
+
+
+## R Markdown Basics
+**Creating an R Markdown Document**
+
+- Commonly used document types can be created 
+
+<div style="float: center;">
+```{r, out.width = "500px",echo=FALSE}
+knitr::include_graphics("img/startMDDoc.png")
+```
+</div>
+
+
+
+## R Markdown Basics
+**Creating an R Markdown Document**
+
+- Slide presentations 
+
+```{r, out.width = "500px",echo=FALSE}
+knitr::include_graphics("img/startMDPres.png")
+```
+
+
+
+## R Markdown Basics
+**Creating an R Markdown Document**
+
+- Truly Interactive Documents/Pages (requires R backend)
+
+```{r, out.width = "500px",echo=FALSE}
+knitr::include_graphics("img/startMDShiny.png")
+```
+
+## R Markdown Basics
+
+- Create an HTML Markdown document
+    
+- Discuss parts: 
+YAML
+Rest
+
+## New Slide!
+
+
+<!--Things to include:
+Earlier, we discussed a basic workflow for capturing your R code where you work interactively in the console, then capture what works in the script editor. R Markdown brings together the console and the script editor, blurring the lines between interactive exploration and long-term code capture. You can rapidly iterate within a chunk, editing and re-executing with Cmd/Ctrl + Shift + Enter. When you’re happy, you move on and start a new chunk.
+
+R Markdown is also important because it so tightly integrates prose and code. This makes it a great analysis notebook because it lets you develop code and record your thoughts. An analysis notebook shares many of the same goals as a classic lab notebook in the physical sciences. It:
+
+Records what you did and why you did it. Regardless of how great your memory is, if you don’t record what you do, there will come a time when you have forgotten important details. Write them down so you don’t forget!
+
+Supports rigorous thinking. You are more likely to come up with a strong analysis if you record your thoughts as you go, and continue to reflect on them. This also saves you time when you eventually write up your analysis to share with others.
+
+Helps others understand your work. It is rare to do data analysis by yourself, and you’ll often be working as part of a team. A lab notebook helps you share not only what you’ve done, but why you did it with your colleagues or lab mates.
+
+
+
+
+
+output options (YAML header)
+  HTML
+  PDF (latex)
+  Slides
+  Shiny Slides
+
+Syntax
+  basic formatting of text
+  adding r code - inline, box
+    options on that (global and just for chunk) - naming chunks, bottom left region, cache 
+  including images
+  links
+  tables (kable from knitr package)
+  lists - ordered, unordered, sublists
+  headers
+  adding math (html (mathjax) vs pdf (latex))
+  Bibliography/Citation
+
+Advanced: use options to:
+  Use NFL data, produce a report for each team
+     
+More with types of output
+
+Interactivity with HTML stuff
+(here things that don't need R code, 3d scatterplot, etc.)
+Lead into shiny and what it can do
+Then add in a shiny slide show
+-->
+
+<!--
+For html_documents another option is to make the code chunks hidden by default, but visible with a click:
+
+output:
+  html_document:
+    code_folding: hide
+-->
+
+<!--
+YAML was first proposed by Clark Evans in 2001,[8] who designed it together with Ingy d?t Net[9] and Oren Ben-Kiki.[9] Originally YAML was said to mean Yet Another Markup Language,[10] referencing its purpose as a markup language with the yet another construct, but it was then repurposed as YAML Ain't Markup Language, a recursive acronym, to distinguish its purpose as data-oriented, rather than document markup.
+-->
