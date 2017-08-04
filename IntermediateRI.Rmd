@@ -10,8 +10,11 @@ logo: img/logo.png
 ---
 
 
-```{r,echo=FALSE}
+```{r setup,echo=FALSE,message=FALSE}
+library(dplyr)
 options(dplyr.print_min = 5)
+library(knitr)
+#opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
 ```
 
 ## Course Schedule  
@@ -49,11 +52,10 @@ options(dplyr.print_min = 5)
     + Code Chunks
     + Images/Equations/Misc.
 
-- R Markdown Output types
+- R Markdown Options
     + Documents: PDF, HTML 
     + Presentations: Slides
-    
-- Interactive Components
+    + Interactive Components
 
 - R Shiny Applications/Presentations
 
@@ -73,7 +75,7 @@ options(dplyr.print_min = 5)
 ## Review of Concepts
 **R Studio** - Can rearrange panes
 
-```{r, out.width = "800px",echo=FALSE}
+```{r panes.png, out.width = "800px",echo=FALSE}
 knitr::include_graphics("img/panes.png")
 ```
 
@@ -87,9 +89,9 @@ knitr::include_graphics("img/panes.png")
 
 > - Keeping different undertakings separate can be difficult!
 
-> - Can use "Projet" feature in R Studio  
+> - Can use "Project" feature in R Studio  
 
-> - Provide straightforward to divide your work into multiple contexts.  Each with their own:    
+> - Provides straightforward way to divide your work into multiple contexts.  Each with their own:    
     <ul>  
       <li> Working directory</li>
       <li> Workspace</li>  
@@ -103,7 +105,7 @@ knitr::include_graphics("img/panes.png")
 
 - Easy to create!  
 
-```{r, out.width = "600px",echo=FALSE}
+```{r project.png, out.width = "600px",echo=FALSE}
 knitr::include_graphics("img/project.png")
 ```
 
@@ -116,9 +118,8 @@ knitr::include_graphics("img/project.png")
 
 - Best R object for data sets
 - Collection (list) of vectors of the same **length**
-- Consider the built in `iris` data set
 
-```{r}
+```{r iris-tibble}
 iris<-tbl_df(iris); iris
 ```
 
@@ -127,7 +128,7 @@ iris<-tbl_df(iris); iris
 
 - Accessing elements: multiple ways
 
-```{r}
+```{r index-df1}
 iris[1:4, 2:4]
 ```
 
@@ -137,7 +138,7 @@ iris[1:4, 2:4]
 
 - Accessing elements: multiple ways
 
-```{r}
+```{r index-df2}
 iris[1, ]
 ```
 
@@ -147,7 +148,7 @@ iris[1, ]
 
 - Accessing elements: multiple ways
 
-```{r}
+```{r index-df3}
 iris[ , c("Sepal.Length", "Species")]
 ```
 
@@ -157,7 +158,7 @@ iris[ , c("Sepal.Length", "Species")]
 
 - Accessing elements: multiple ways
 
-```{r}
+```{r index-df4}
 iris$Sepal.Length
 ```
 
@@ -193,24 +194,70 @@ install.packages("tidyverse")
 ## Review of Concepts  
 
 - Once installed, `library()` or `require()` to load
-```{r}
+```{r tidyverse}
 library(tidyverse)
 ```    
 
 
 ## Tidyverse Syntax
 
-- Reason to prefer `dplyr` and packages from the `tidyverse` 
-
-> - Fast!
-
-> - Good defaults
-
-> - All packages have similar syntax!  All work on `tibbles` (data frames)  
+ - All packages have similar syntax!  All work on `tibbles` (epecial data frames)  
 
 > - Convert any data frame (or matrix) to a tibble using `tbl_df()`
 
-> - Syntax: function(data.frame, options)
+> - Nice printing properties (can sometimes cause issues though)
+
+> - Most packages have syntax: `function(data.frame, options)`
+
+
+
+## Tidyverse Syntax
+
+ - All packages have similar syntax!  All work on `tibbles` (epecial data frames)  
+
+ - Convert any data frame (or matrix) to a tibble using `tbl_df()`
+
+ - Nice printing properties (can sometimes cause issues though)
+
+ - Syntax: `function(data.frame, options)`
+
+- Examples:
+```{r ggplot,eval=FALSE}
+select(iris, Sepal.Width)
+ggplot(iris, aes(x = Sepal.Width, y = Sepal.Length)) + geom_point()
+```
+
+
+## Review of Concepts
+
+- Read in most any type of data with 
+    + readr (.csv, delimited data)  
+    + readxl (.xls, .xlsx)  
+    + haven (.sav, .dta, .sas7bdat)  
+    
+```{r votingDataP,eval=FALSE}
+#read in data (readr, readxl, haven packages)
+votingData <- read_csv("https://raw.githubusercontent.com/
+                       jbpost2/IntermediateR/master/datasets/counties.csv")
+```
+
+## Review of Concepts  
+
+```{r votingDataE,eval=TRUE, echo=FALSE, message=FALSE}
+#read in data (readr, readxl, haven packages)
+votingData <- read_csv("https://raw.githubusercontent.com/jbpost2/IntermediateR/master/datasets/counties.csv")
+```
+```{r}
+votingData
+```
+
+
+## Review of Concepts  
+**Piping or Chaining**
+
+- Applying multiple functions: nesting hard to parse!
+- Piping or Chaining with %>% operator helps
+
 
 
 ## Review of Concepts  
@@ -219,48 +266,93 @@ library(tidyverse)
 - Applying multiple functions: nesting hard to parse!
 - Piping or Chaining with %>% operator helps
 - If `dplyr` or `magrittr` package loaded, can use anywhere
-```{r}
-a<-runif(n = 10)
-a
+```{r pipingP,eval=FALSE}
+#Consider
+votingData %>% 
+  filter((state == "NC") & (college > 20)) %>% 
+  select(county, msa, pop.density:turnout) %>% 
+  arrange(college, desc(turnout))
+#vs
+arrange(select(filter(votingData, ((state == "NC") & (college > 20))), 
+               county, msa, pop.density:turnout), college, desc(turnout))
+```
+
+## Review of Concepts  
+**Piping or Chaining**
+
+```{r pipingE}
+votingData %>% 
+  filter((state == "NC") & (college > 20)) %>% 
+  select(county, msa, pop.density:turnout) %>% 
+  arrange(college, desc(turnout))
+```
+
+## Review of Concepts  
+**Plotting**  
+
+- R great for plotting  
+
+> - We'll use `ggplot2` in `tidyverse`! [cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)  
+
+> - Needs:  Data Frame
+> - Aesthetic (aes) - maps variables to properties of geom
+      <ul>
+         <li> Ex: size, color, and x, y location(s) </li>
+        </ul>
+> - Geom layer(s) (visualizaton type(s))  
+> - Coordinate system (mostly use Cartesian plane)  
+> - Optional: Stat layer, titles, etc.
+
+
+## Review of Concepts  
+`ggplot2` needs and syntax
+
+Needs:
+
+- Data Frame  
+- Aesthetic (aes) - maps variables to properties of geom  
+- Geom layer(s) (visualizaton type(s))    
+- Optional: Stat layer, titles, etc.  
+ 
+- Syntax:
+
+```{r ggplot-syntax,eval=FALSE}
+g <- ggplot(dataframe,aes(x = , y = , ...))
+g + geom_type(...) +
+  stat_type(...) + 
+  labs(...)
 ```
 
 ## Review of Concepts
-**Piping or Chaining**
 
-```{r}
-#silly example
-a %>% quantile()
-a %>% quantile() %>% range()
+- Settings that depend on a variable go in `aes`  
+
+```{r ggplot-facet-exP,eval=FALSE,echo=TRUE,message=FALSE}
+g <- ggplot(votingData, aes(x = income, y = turnout)) +
+  geom_point(size = 0.5, aes(color = college)) +
+  geom_smooth() +
+  geom_rug() +
+  facet_grid(region ~ .)
+g
 ```
 
 ## Review of Concepts
-**Piping or Chaining**
 
-- Applying multiple functions: nesting hard to parse!
-- Piping or Chaining with `%>%` operator helps
-
-```{r}
-library(Lahman) #Install if needed!
-Batting<-tbl_df(Batting) 
-arrange(filter(Batting, teamID == "PIT"), desc(G))
-```
-
-## Review of Concept  
-**Piping or Chaining**
-
-- Applying multiple functions: nesting hard to parse!
-- Piping or Chaining with `%>%` operator helps
-
-```{r}
-Batting %>% filter(teamID == "PIT") %>% arrange(desc(G))
+```{r ggplot-face-exE,eval=TRUE, echo=FALSE, message=FALSE}
+g <- ggplot(votingData, aes(x = income, y = turnout)) +
+  geom_point(size = 0.5, aes(color = college)) +
+  geom_smooth() +
+  geom_rug() +
+  facet_grid(region ~ .)
+g
 ```
 
 
 ## What do we want to be able to do?
 
-- **Communicate findings effectively** 
+- Communicate findings effectively 
 
-- **Encompass and document entire data analysis process**
+- Encompass and document entire data analysis process  
 
 - Document findings 
 
@@ -269,23 +361,66 @@ Batting %>% filter(teamID == "PIT") %>% arrange(desc(G))
 - Share process
 
 
+## Where do we start?  
 
-So far, you’ve learned the tools to get your data into R, tidy it into a form convenient for analysis, and then understand your data through transformation, visualisation and modelling. However, it doesn’t matter how great your analysis is unless you can explain it to others: you need to communicate your results.
+- Review of Key Concepts  
+
+- R Markdown Basics  
+    + Code Chunks
+    + Images/Equations/Misc.
+
+- R Markdown Options
+    + Documents: PDF, HTML 
+    + Presentations: Slides
+    + Interactive Components
+
+- R Shiny Applications/Presentations
+
+
+
+## R Markdown Basics  
+
+
+```{r process.png, out.width = "700px",echo=FALSE}
+knitr::include_graphics("img/process.png")
+```  
+
+(From R for Data Science)  
+
+
+## R Markdown Basics 
+
+- Can read data into R 
+
+- Know how to manipulate it  
+
+- Likely know best ways to model and visualize it
+
+> - Doesn’t matter how great your analysis is unless you can explain it to others :)
+
+> - Need to communicate results effectively
 
 
 ## R Markdown Basics  
 **What is Markdown?**  
 
-- Formatting syntax for authoring HTML, PDF, slide shows, books, and more
+- Formatting syntax for authoring HTML, PDF, slide shows, books, and more.  
 
-- Document easily embeds R (and other) code
+> - Digitial "Notebook":  Program that weaves word processing and code.  [Example](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/IntermediateRI.Rmd)  
 
-- Can do interactive documents as well!
+> - Can do interactive documents! 
 
-- Designed to be used in three ways (R for Data Science)
-    + Communicating to decision makers, who want to focus on the conclusions, not the code behind the analysis.
-    + Collaborating with other data scientists (including future you!), who are interested in both your conclusions, and how you reached them (i.e. the code).
-    + As an environment in which to do data science, as a modern day lab notebook where you can capture not only what you did, but also what you were thinking.
+
+## R Markdown Basics  
+**How to use Markdown?**  
+
+Designed to be used in three ways (R for Data Science)  
+
+> + Communicating to decision makers (focus on conclusions not code)
+
+> + Collaborating with other data scientists (including future you!)
+
+> + As environment to do data science (documents what you did and what you were thinking)
 
 
 ## R Markdown Basics
@@ -293,18 +428,49 @@ So far, you’ve learned the tools to get your data into R, tidy it into a form 
 <iframe width="560" height="315" src="video/Markdown.mp4" frameborder="0" allowfullscreen></iframe>
 
 
-## R Markdown Basics
+## R Markdown Basics  
 
-More here about simple text writing
-Markup vs markdown ideas
-text vs .mD
+[Examples](http://rmarkdown.rstudio.com/gallery.html) of markdown documents
+
+
+## R Markdown Basics
+**Verbage**
+
+- Most have heard of HTML (HyperText Mark-up Language)  
+    + Write plain text that the browser interprets and renders  
+    
+    
+## R Markdown Basics
+**Verbage**
+
+- Most have heard of HTML (HyperText Mark-up Language)  
+    + Write plain text that the browser interprets and renders  
+    
+- Markdown is a specific markup language  
+    + Easier syntax  
+    + Not as powerful  
+    
+- Any plain text file with .Rmd extension can be used  
+
+
+## R Markdown Basics
+**R Markdown Basics**
+
+R Markdown file contains three important types of content:
+
+> 1. (Optional) YAML header surrounded by `---`s  
+
+> 2. Chunks of R code surrounded by ```  
+
+> 3. Text mixed with simple text formatting like # heading and _italics_  
+
 
 ## R Markdown Basics
 **Creating an R Markdown Document**
 
 - R Studio makes it easy!  
 
-```{r, out.width = "700px",echo=FALSE}
+```{r startMD.png, out.width = "700px",echo=FALSE}
 knitr::include_graphics("img/startMD.png")
 ```
 
@@ -315,7 +481,7 @@ knitr::include_graphics("img/startMD.png")
 - Commonly used document types can be created 
 
 <div style="float: center;">
-```{r, out.width = "500px",echo=FALSE}
+```{r startMDDoc.png, out.width = "500px",echo=FALSE}
 knitr::include_graphics("img/startMDDoc.png")
 ```
 </div>
@@ -327,7 +493,7 @@ knitr::include_graphics("img/startMDDoc.png")
 
 - Slide presentations 
 
-```{r, out.width = "500px",echo=FALSE}
+```{r startMDPres.png, out.width = "500px",echo=FALSE}
 knitr::include_graphics("img/startMDPres.png")
 ```
 
@@ -338,73 +504,736 @@ knitr::include_graphics("img/startMDPres.png")
 
 - Truly Interactive Documents/Pages (requires R backend)
 
-```{r, out.width = "500px",echo=FALSE}
+```{r startMDShiny.png, out.width = "500px",echo=FALSE}
 knitr::include_graphics("img/startMDShiny.png")
 ```
 
 ## R Markdown Basics
 
-- Create an HTML Markdown document
-    
-- Discuss parts: 
-YAML
-Rest
+- Create an HTML Markdown document!
+```
+---
+title: "Untitled"
+author: "Justin Post"
+date: "August 10, 2017"
+output: html_document
+---
+```  
 
-## New Slide!
+ - Top section:  YAML header     
+ 
+> - Define settings for document  
 
+> - Author, Title, etc.  
 
-<!--Things to include:
-Earlier, we discussed a basic workflow for capturing your R code where you work interactively in the console, then capture what works in the script editor. R Markdown brings together the console and the script editor, blurring the lines between interactive exploration and long-term code capture. You can rapidly iterate within a chunk, editing and re-executing with Cmd/Ctrl + Shift + Enter. When you’re happy, you move on and start a new chunk.
-
-R Markdown is also important because it so tightly integrates prose and code. This makes it a great analysis notebook because it lets you develop code and record your thoughts. An analysis notebook shares many of the same goals as a classic lab notebook in the physical sciences. It:
-
-Records what you did and why you did it. Regardless of how great your memory is, if you don’t record what you do, there will come a time when you have forgotten important details. Write them down so you don’t forget!
-
-Supports rigorous thinking. You are more likely to come up with a strong analysis if you record your thoughts as you go, and continue to reflect on them. This also saves you time when you eventually write up your analysis to share with others.
-
-Helps others understand your work. It is rare to do data analysis by yourself, and you’ll often be working as part of a team. A lab notebook helps you share not only what you’ve done, but why you did it with your colleagues or lab mates.
+> - Output type/Options  
 
 
-
-
-
-output options (YAML header)
-  HTML
-  PDF (latex)
-  Slides
-  Shiny Slides
-
-Syntax
-  basic formatting of text
-  adding r code - inline, box
-    options on that (global and just for chunk) - naming chunks, bottom left region, cache 
-  including images
-  links
-  tables (kable from knitr package)
-  lists - ordered, unordered, sublists
-  headers
-  adding math (html (mathjax) vs pdf (latex))
-  Bibliography/Citation
-
-Advanced: use options to:
-  Use NFL data, produce a report for each team
      
-More with types of output
+## R Markdown Basics
+     
+ - Below YAML header: 'r chunk'  
 
-Interactivity with HTML stuff
-(here things that don't need R code, 3d scatterplot, etc.)
-Lead into shiny and what it can do
-Then add in a shiny slide show
--->
+```{r chunk_png, out.width = "500px",echo=FALSE}
+knitr::include_graphics("img/chunk.png")
+```  
 
-<!--
+> - Start code chunk by typing it out or with CTRL/CMD + Alt + I
+
+> - Code will be executed when document is created    
+
+> - Specify options about individual chunk here  
+
+
+## R Markdown Basics
+     
+- Below code chunk is plain text with markdown sytnax  
+
+```
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax
+for authoring HTML, PDF, and MS Word documents. For more details on
+using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that
+includes both content as well as the output of any embedded R code
+chunks within the document. 
+```
+
+- When file created, "##" becomes a header, "<...>" a link, and "**...**" bold font
+
+
+## R Markdown Basics  
+
+### R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax
+for authoring HTML, PDF, and MS Word documents. For more details on
+using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that
+includes both content as well as the output of any embedded R code
+chunks within the document. 
+
+
+## Where do we go from here?  
+
+- Figure out markdown syntax  
+
+> - Look at "Notebook" feature  
+
+> - Check options for code chunks  
+
+> - Automate some things  
+
+> - Change type of output  
+
+> - Work with interactivity (shiny)  
+
+
+## R Markdown Syntax  
+
+You can include:  
+
+> - Plain text  
+> - End a line with two spaces to start a new paragraph  
+  <ul>  
+      <li> Line breaks are not always added when you return!</li>
+      <li> Two spaces and a return drop marked up text down.</li>
+      <li> Can specify ```<br>```  as a line break</li>
+  </ul>  
+  
+> - ```*italics*``` *and* ```_italics_```  
+
+> - ```**bold**``` **and** ```__bold__```
+
+> - ```superscript^2^``` becomes superscript^2^  
+
+> - ```~~strikethrough~~```  becomes ~~strikethrough~~
+
+
+## R Markdown Syntax  
+
+- ```[link](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)``` becomes [link](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)  
+
+> - ```# Header 1``` becomes a large font header  
+
+> - ```## Header 2``` becomes a slightly smaller font header  
+
+> - Goes to 6 headers  
+
+> - Use of headers can automatically create a Table of Contents!
+
+> - Include an image: ```![](path/to/file.png)```  
+
+
+## R Markdown Syntax
+
+- Can do lists: be sure to end each line with two spaces!  
+  + Indent sub lists two spaces (I often do four for both) 
+
+<div style = "float: left; width: 50%">
+```
+* unordered list  
+* item 2  
+  + sub-item 1  
+  + sub-item 2  
+
+1. ordered list  
+2. item 2  
+  + sub-item 1  
+  + sub-item 2  
+```  
+</div>
+<div style = "float: right; width: 50%">
+* unordered list  
+* item 2  
+    + sub-item 1  
+    + sub-item 2  
+
+1. ordered list  
+2. item 2  
+    + sub-item 1  
+    + sub-item 2  
+</div>
+
+
+## R Markdown Syntax  
+
+- Can include nice tables  
+
+```
+Table Header  | Second Header | Col 3
+------------- | ------------- | -----------
+Table Cell    | Cell (1, 2)   | Cell (1, 3)
+Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) 
+```
+Table Header  | Second Header | Col 3
+------------- | ------------- | -----------
+Table Cell    | Cell (1, 2)   | Cell (1, 3)
+Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) 
+
+
+## Activity 
+
+- [**Formatting Text Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/TextActivity.html) available on web  
+
+- Work in small groups  
+
+- Ask questions!  TAs and I will float about the room  
+
+- Feel free to ask questions about anything you didn't understand as well!   
+
+
+## What do we want to be able to do?
+
+- Communicate findings effectively 
+
+- Encompass and document entire data analysis process
+
+- Document findings 
+
+- Make process reproducible  
+
+- Share process
+
+
+
+## Where are we at?  
+
+- Review of Key Concepts  
+
+- R Markdown Basics  
+    + **Code Chunks**  
+    + **Images/Equations/Misc.**
+
+- R Markdown Options
+    + Documents: PDF, HTML 
+    + Presentations: Slides
+    + Interactive Components
+    
+- R Shiny Applications/Presentations
+
+
+## Code Chunks  
+
+We've already seen how to include an R code chunk:
+```{r chunk.png, echo = FALSE}
+knitr::include_graphics("img/chunk.png")
+```   
+
+- Add chunk via typing it out or `Ctrl/Cmd + Alt + I`  
+
+- Any R code can go into the chunk  
+
+
+## Notebook Functionality  
+
+Data science notebook - virtual notebook environment used for literate programming  
+
+> - Pairs the functionality of word processing software with a programming language
+
+
+> - Rendered markdown document captures R code and process  
+
+> - R Markdown brings together the console and the script editor too!  
+
+> - Blurs line between interactive exploration and long-term code capture. 
+
+
+## Notebook Functionality  
+
+Within a chunk:  
+
+ - Execute code with `Cmd/Ctrl + Shift + Enter` or with "Run"  
+
+```{r chunkRun.png, echo = FALSE}
+knitr::include_graphics("img/chunkRun.png")
+```
+> - Results show up in editor!  
+
+
+## Notebook Functionality  
+
+ - Allows for quick iteration within a chunk: editing and re-executing - when you’re happy, you move on and start a new chunk.
+
+> - Go back to markdown template document, execute code chunk in-line  
+
+> - Can run all code chunks with `Ctrl/Cmd + Alt + R`  
+
+> - Can develop code and record your thoughts - similar to classic lab notebook in the physical sciences
+
+
+## Back to Code Chunks  
+
+- Many options depending on chunk purpose!    
+
+> - Can hide/show code with `echo = FALSE/TRUE'
+
+> - Can choose if code is evaluated with `eval = TRUE/FALSE'   
+
+> - `Include = FALSE` is equivalent to `echo = FALSE, eval = TRUE`    
+
+> - Useful for set-up code (usually first chunk after YAML header) 
+
+
+## Code Chunks  
+
+- `message = TRUE/FALSE` and `warning = TRUE/FALSE` can turn on/off displaying messages/warnings   
+
+> - `error = TRUE` allows file to be created with code that has an error
+
+> - Code can be added in line:  Ex: Iris has `r length(iris$Sepal.Length)` observations  
+
+> - Added by beginning with back-tick `r` and ending with a back-tick
+
+
+## Code Chunks  
+
+Meantioned using `Include = FALSE` for 'set-up code' (usually first chunk after YAML header)  
+
+> - Can set global options for chunks  
+
+> - Allows for easy change of audience!  
+
+```
+opts_chunk$set(echo = FALSE, eval = TRUE, warning = FALSE)
+```
+
+## Code Chunks  
+
+Can name code chunks to help organization!  
+
+> - When calling a chunk, add name after `r`  ({r name-of-chunk, options...})  
+
+> - TOC type menu in bottom left of notebook editor!  
+
+```{r TOC.png, echo=FALSE}
+knitr::include_graphics("img/TOC.png")
+```
+
+## Code Chunks
+
+In a large analysis it may take a long time to run code chunks/knit your document  
+
+> - Can "Cache" results!  Code will only rerun if it has changed.  
+
+> - Option to set up code dependencies using chunk names
+
+> - Use `cache = TRUE` in code chunk definition
+
+> - Can do global option for caching!
+
+> - Delete folders created to rerun everything
+
+
+## Images/Equations and Misc.
+
+Adding images in markdown: `![](path/to/file)`  
+
+> - Not ideal... difficult to control size/scale  
+
+> - Better way to add images use R code!  
+
+> - `knitr` package has `include_graphics` function  
+
+> - Use knitr or code chunk options to control size/scale!
+
+> - Ex:  {r graphics, out.width = "800px", echo = FALSE}
+knitr::include_graphics(path/to/file)
+
+
+
+## Images/Equations and Misc.
+
+Adding Equations  
+
+> - Inline equation: ```$A = \pi*r^{2}$``` becomes $A = \pi*r^{2}$  
+
+> - Block equation ```$$A = \pi*r^{2}$$``` becomes $$A = \pi*r^{2}$$  
+
+> - Outputting equations for HTML is done through MathJax (javascript)  
+
+> - For PDFs it is done through LaTeX (may need to install)  
+
+
+## Images/Equations and Misc.
+
+Outputting data tables better with `kable` from `knitr` package
+
+<div style = "float: left; width = 40%;">
+```{r kable, echo = TRUE, eval = TRUE}
+summary(cars)
+```
+</div>
+<div style = "float: right; width = 55%;">
+```{r kable2, echo = TRUE, eval = TRUE}
+kable(summary(cars))
+```
+</div>
+
+
+## Activity 
+
+- [**Using Notebook Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/NotebookActivity.html) available on web  
+
+- Work in small groups  
+
+- Ask questions!  TAs and I will float about the room  
+
+- Feel free to ask questions about anything you didn't understand as well!  
+
+
+
+## What do we want to be able to do?
+
+- Communicate findings effectively 
+
+- Encompass and document entire data analysis process
+
+- Document findings 
+
+- Make process reproducible
+
+- Share process
+
+
+
+## Where are we at?  
+
+- Review of Key Concepts  
+
+- R Markdown Basics  
+    + Code Chunks
+    + Images/Equations/Misc.
+
+- R Markdown Options
+    + Documents: PDF, HTML 
+    + Presentations: Slides
+    + Interactive Components
+
+- R Shiny Applications/Presentations
+
+
+## Common Outputs  
+
+R Markdown really flexible!  
+
+```{r, echo = FALSE}
+knitr::include_graphics("img/compile.png")
+```
+
+
+
+## Common Outputs  
+
+R Markdown really flexible!  
+
+```{r, echo = FALSE}
+knitr::include_graphics("img/compile.png")
+```
+
+
+## Common Outputs  
+
+Change output type in the YAML header:  
+
+- HTML (a web page)  
+```
+output:  html_document  
+```
+
+Use code explicity:  
+
+`rmarkdown::render("file.Rmd", output_format = "word_document")`
+
+Use Knit menu:  
+```{r knit, echo=FALSE}
+knitr::include_graphics("img/knit.png")
+```
+
+
+## Common Outputs
+For HTML can include Table of Contents with options    
+
+```
+output:
+  html_document:
+    toc: true
+    toc_float: true
+```
+
+## Common Outputs  
+
+For HTML can include Table of Contents with options    
+
+```
+output:
+  html_document:
+    toc: true
+    toc_float: true
+```
+
 For html_documents another option is to make the code chunks hidden by default, but visible with a click:
 
+```
 output:
   html_document:
     code_folding: hide
--->
+```
 
-<!--
-YAML was first proposed by Clark Evans in 2001,[8] who designed it together with Ingy d?t Net[9] and Oren Ben-Kiki.[9] Originally YAML was said to mean Yet Another Markup Language,[10] referencing its purpose as a markup language with the yet another construct, but it was then repurposed as YAML Ain't Markup Language, a recursive acronym, to distinguish its purpose as data-oriented, rather than document markup.
--->
+
+## Common Outputs  
+
+- PDF  
+  + May want to install LaTeX for equations  
+
+```
+output: pdf_document   
+```
+  
+
+## Common Outputs  
+
+- PDF  
+  + May want to install LaTeX for equations  
+
+```
+output: pdf_document   
+```
+  
+
+- Word  
+
+```
+output: word_document
+```
+
+## Common Outputs  
+
+Presentations/Slides  
+
+> - `output: ioslides_presentation` - HTML presentation
+
+> - `slidy_presentation` - HTML presentation
+
+> - `beamer_presentation` - PDF presentation with LaTeX Beamer
+
+
+## Common Outputs  
+
+Presentations/Slides  
+
+- `output: ioslides_presentation` - HTML presentation
+
+- `slidy_presentation` - HTML presentation
+
+- `beamer_presentation` - PDF presentation with LaTeX Beamer
+
+- Shiny (covered later) slides   
+
+```
+output: html_document
+runtime: shinyShiny Slides
+```
+
+## Common Outputs  
+
+Can create more than one document at a time!  
+
+- Just add another output statement in the YAML header  
+
+```
+output:
+  html_document:
+    toc: true
+    toc_float: true
+  word_document: default 
+
+```
+Then use code:  
+
+`rmarkdown::render("file.Rmd", output_format = "all")`
+
+
+## Parameters  
+
+Parameters can be added to the YAML header  
+
+ - Can help to automate reports!
+
+```
+title: "NFL Reports"
+author: "Justin Post"
+date: "August 10-11, 2017"
+output: html_document  
+params: 
+      team: "Pittsburgh Steelers"
+```
+
+> - Access via params$team  
+
+> - Can 'Knit with parameters'  
+
+> - Example: Let's open up the [NFL.Rmd document](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/NFL.Rmd)
+
+
+## Automation of Documents  
+
+- Create data frame for each class (here team)  
+
+```{r, eval = TRUE, echo = FALSE, message = FALSE}
+scoreData <- read_csv("https://github.com/jbpost2/IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
+```
+```{r, eval = FALSE, echo = TRUE, message = FALSE}
+scoreData <- read_csv("https://github.com/jbpost2/
+											IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
+```
+```{r, eval = TRUE, echo = TRUE, message = FALSE}
+reports <- tibble(
+  teamIDs = unique(scoreData$awayTeam),
+  filename = stringr::str_c("TeamID-", teamIDs, ".html"),
+  params = purrr::map(teamIDs, ~ list(team = .))
+)
+```
+
+## Automation of Documents  
+
+```{r}
+reports
+```
+
+## Automation of Documents  
+
+Now knit via the following code:
+
+```{r, eval = FALSE}
+reports %>% 
+  select(output_file = filename, params) %>% 
+  purrr::pwalk(rmarkdown::render, input = "NFL.Rmd")
+```
+
+## Interactivity  
+
+HTML documents inherently interactive  
+
+- Widgets can be included  
+
+```{r leafletP, echo = TRUE, eval = FALSE}
+library(leaflet)
+leaflet() %>%
+  setView(174.764, -36.877, zoom = 16) %>% 
+  addTiles() %>%
+  addMarkers(174.764, -36.877, popup = "Maungawhau") 
+```
+
+## Interactivity    
+
+```{r leafletE, echo = FALSE, eval = TRUE}
+library(leaflet)
+leaflet() %>%
+  setView(174.764, -36.877, zoom = 16) %>% 
+  addTiles() %>%
+  addMarkers(174.764, -36.877, popup = "Maungawhau") 
+```
+
+## Interactivity   
+
+Interactive tables with `DT` library
+
+```{r DTP, echo = TRUE, eval = FALSE}
+library(DT)
+datatable(iris)
+```
+
+## Interactivity   
+
+```{r DTE, echo = FALSE, eval = TRUE}
+library(DT)
+datatable(iris)
+```
+
+
+## Interactivity 
+
+- 3d scatterplots with `rthreejs` package  
+```{r scatter3dP, eval = FALSE}
+if(!require("devtools")) install.packages("devtools")
+devtools::install_github("bwlewis/rthreejs")
+
+library(threejs)
+
+scatterplot3js(x = iris$Sepal.Width, y = iris$Sepal.Length, 
+							 z = iris$Petal.Width, color = 
+							 	c(rep("blue", 50), rep("red", 50), 
+							 		rep("green", 50)), 
+							 size = 0.5)
+```
+
+## Interactivity 
+```{r scatter3dE, echo = FALSE, message = FALSE, warning = FALSE}
+library(threejs)
+
+scatterplot3js(x = iris$Sepal.Width, y = iris$Sepal.Length, 
+							 z = iris$Petal.Width, color = 
+							 	c(rep("blue", 50), rep("red", 50), 
+							 		rep("green", 50)), 
+							 size = 0.5)
+```
+
+
+## Interactivity  
+
+Previous interactivity happened in the browser  
+
+> - Great because anyone can access with a browser  
+
+> - Bad because you can't have as much functionality as you want...
+
+> - Shiny allows for interactivity with R!  
+
+> - Only con: Requires R running somewhere
+
+> - Examples: [Shiny Showcase](https://www.rstudio.com/products/shiny/shiny-user-showcase/), [Shiny Gallery](https://shiny.rstudio.com/gallery/) 
+
+
+## Activity 
+
+- [**Outputs and Interactivity Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/OutputsActivity.html) available on web  
+
+- Work in small groups  
+
+- Ask questions!  TAs and I will float about the room  
+
+- Feel free to ask questions about anything you didn't understand as well!  
+
+
+## What do we want to be able to do?
+
+- Communicate findings effectively 
+
+- Encompass and document entire data analysis process
+
+- Document findings 
+
+- Make process reproducible
+
+- Share process
+
+
+
+## Where are we at?  
+
+- Review of Key Concepts  
+
+- R Markdown Basics  
+    + Code Chunks**
+    + Images/Equations/Misc.
+
+- R Markdown Options
+    + Documents: PDF, HTML 
+    + Presentations: Slides
+    + Interactive Components
+
+- R Shiny Applications/Presentations

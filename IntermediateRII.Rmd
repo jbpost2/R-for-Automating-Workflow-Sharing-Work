@@ -5,6 +5,7 @@ date: "August 10-11, 2017"
 output:       
       ioslides_presentation:
          css: css/style.css
+         widescreen: yes
 transition: faster
 logo: img/logo.png
 runtime: shiny
@@ -15,7 +16,7 @@ runtime: shiny
 library(dplyr)
 options(dplyr.print_min = 5)
 library(knitr)
-library(tidyverse)
+library(readr)
 opts_chunk$set(echo = FALSE)
 ```
 
