@@ -970,7 +970,7 @@ shinyApp(
 
 ## Activity 
 
-- [**UI Set-up Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/UISetUp.html) available on web  
+- [**UI Set-up Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/UISetUpActivity.html) available on web  
 
 - Work in small groups  
 
@@ -1247,7 +1247,7 @@ Draw out what you want the app to look like
 
 ## Activity 
 
-- [**First Full App Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/FirstApp.html) available on web  
+- [**First Full App Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/FirstAppActivity.html) available on web  
 
 - Work in small groups  
 
