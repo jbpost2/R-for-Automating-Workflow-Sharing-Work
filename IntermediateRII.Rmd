@@ -7,7 +7,7 @@ output:
          css: css/style.css
          widescreen: yes
 transition: faster
-logo: img/logo.png
+logo: img/logo.PNG
 runtime: shiny
 ---
 
@@ -590,7 +590,7 @@ shinyServer(function(input, output,session) {
 
 ##App Duties  
 ```{r appRep.png, out.width = "750px"}
-knitr::include_graphics("img/appRep.png")
+knitr::include_graphics("img/appRep.PNG")
 ```  
 
 ##Common Layout
@@ -618,7 +618,7 @@ shinyUI(fluidPage(
   
 
 ***  
-![](img/folderStructure.png)
+![](img/folderStructure.PNG)
 
 ##`ui.R` Basic File
 ```{r basic-ui,eval=FALSE,echo=TRUE}
@@ -645,7 +645,7 @@ shinyServer(function(input, output) {
 
 ##Shiny Templates  
 Readily available in R studio  
-![](templates.png)  
+![](img/templates.PNG)  
 
 ##Two File Template
 ```{r two-file-template-ui,eval=FALSE,echo=TRUE}
@@ -688,12 +688,12 @@ server <- function(input, output) {
 
 ##Running an App  
   - While `ui.R` or `server.R` is your active window, click the **Run App** button  
-  ![](img/runAppButton.png) 
+  ![](img/runAppButton.PNG) 
   
 
 ##Running an App  
   - While `ui.R` or `server.R` is your active window, click the **Run App** button  
-  ![](img/runAppButton.png)    
+  ![](img/runAppButton.PNG)    
   
   - Set working directory to ShinyApps folder  
   - Load `shiny` package  
@@ -703,7 +703,7 @@ server <- function(input, output) {
 
 ##Running an App  
   - While `ui.R` or `server.R` is your active window, click the **Run App** button  
-  ![](img/runAppButton.png)    
+  ![](img/runAppButton.PNG)    
   
   - Set working directory to ShinyApps folder  
   - Load `shiny` package  
@@ -722,7 +722,7 @@ server <- function(input, output) {
 ##Adding to the UI - Widgets  
   - Widgets can be added using their `*Input` functions  
   - Separate widgets (and other items) by commas in ui.R file
-  ![](img/widgets.png)  
+  ![](img/widgets.PNG)  
   
   
 ***
@@ -876,13 +876,13 @@ Using a comma to separate items, you can add
 
 - Any plain strings  
 - Formatted text (using HTML type functions)  
-  ![](img/tags.png)  
+  ![](img/tags.PNG)  
 - Output from things created in the `server.R` file  
   
   
     
 ##Sharing Between Server and UI  
-![](img/outputsUI.png)  
+![](img/outputsUI.PNG)  
 
 ##Adding to the UI - Example Syntax
 ```{r ui-syntax,echo=TRUE,eval=FALSE}
@@ -1011,7 +1011,7 @@ The arguments for the server are `input` and `output`, which allow us to
   
 
 ##Creating Output to Send to UI  
-![](img/outputsUI.png)  
+![](img/outputsUI.PNG)  
 
 ##Creating Output to Send to UI
 Example syntax
@@ -1765,7 +1765,7 @@ shinyUI(fluidPage(
     + Gives stats about usage  
     + Integrated into R Studio  
 
-![](img/publish.png)     
+![](img/publish.PNG)     
 
 
 ##Sharing App  
@@ -1978,7 +1978,7 @@ shinyServer(function(input,output){
 ##Breakpoints  
   - Can be used in `server.r`  
   - Click to the left of the line number  
-  ![](img/breakpointExample.png)
+  ![](img/breakpointExample.PNG)
  > - Now can access values and step through program  
  > - Can also use browser()
   
@@ -1995,7 +1995,7 @@ shiny::runApp(display.mode="showcase")
 ##Error Handling  
   - Check stack trace shiny returns
 
-![](img/stacktrace.png)  
+![](img/stacktrace.PNG)  
 
 ##Enter Debug Mode on Error  
   - Can make Shiny enter the debugger when an error occurs by using the following statement:  
