@@ -19,7 +19,7 @@ shinyServer(function(input, output, session) {
     #base plotting object
     g <- ggplot(sleepData, aes(x = bodywt, y = sleep_total))
     
-		if (input$conservation) {
+    if (input$conservation) {
     	g + geom_point(size = input$size, aes(col = conservation))
     } else {
     	g + geom_point(size = input$size)
