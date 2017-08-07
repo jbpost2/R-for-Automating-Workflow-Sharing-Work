@@ -1,23 +1,16 @@
-###########################################################################
-##R Shiny App to plot basketball data
-##Justin Post
-###########################################################################
-
-#Load package
-library(shiny)
-PlayerNames<-read.csv("PlayerNames.csv",header=TRUE)[,2]
+library(ggplot2)
 
 ui<-fluidPage(
   
   # Application title
-  titlePanel(),
+  titlePanel(" "),
   
-  # Sidebar with options for the data set
+  # Sidebar with options
   sidebarLayout(
     sidebarPanel(
     ),
     
-    # Show plots
+    # Show output
     mainPanel(
     )
   )
