@@ -757,7 +757,8 @@ Within a chunk:
 
 ```{r chunkRun.png, echo = FALSE}
 knitr::include_graphics("img/chunkRun.png")
-```
+```  
+
 > - Results show up in editor!  
 
 
@@ -776,9 +777,9 @@ knitr::include_graphics("img/chunkRun.png")
 
 - Many options depending on chunk purpose!    
 
-> - Can hide/show code with `echo = FALSE/TRUE'
+> - Can hide/show code with `echo = FALSE/TRUE`
 
-> - Can choose if code is evaluated with `eval = TRUE/FALSE'   
+> - Can choose if code is evaluated with `eval = TRUE/FALSE`   
 
 > - `Include = FALSE` is equivalent to `echo = FALSE, eval = TRUE`    
 
@@ -812,7 +813,22 @@ opts_chunk$set(echo = FALSE, eval = TRUE, warning = FALSE)
 
 Can name code chunks to help organization!  
 
-> - When calling a chunk, add name after `r`  ({r name-of-chunk, options...})  
+- When calling a chunk, add name after `r`    
+
+\`\`\`{r name-of-chunk, options...}   
+code  
+\`\`\`
+
+
+## Code Chunks  
+
+Can name code chunks to help organization!  
+
+- When calling a chunk, add name after `r`    
+
+\`\`\`{r name-of-chunk, options...}   
+code  
+\`\`\`
 
 > - TOC type menu in bottom left of notebook editor!  
 
@@ -847,7 +863,8 @@ Adding images in markdown: `![](path/to/file)`
 
 > - Use knitr or code chunk options to control size/scale!
 
-> - Ex:  \`\`\`{r graphics, out.width = "800px", echo = FALSE}
+> - Ex:  
+\`\`\`{r graphics, out.width = "800px", echo = FALSE}
 knitr::include_graphics(path/to/file)  
 \`\`\`
 
@@ -869,12 +886,12 @@ Adding Equations
 
 Outputting data tables better with `kable` from `knitr` package
 
-<div style = "float: left; width = 40%;">
+<div style = "float: left; width = 35%;">
 ```{r kable, echo = TRUE, eval = TRUE}
 summary(cars)
 ```
 </div>
-<div style = "float: right; width = 55%;">
+<div style = "float: right; width = 60%;">
 ```{r kable2, echo = TRUE, eval = TRUE}
 kable(summary(cars))
 ```
@@ -921,15 +938,6 @@ kable(summary(cars))
     + Interactive Components
 
 - R Shiny Applications/Presentations
-
-
-## Common Outputs  
-
-R Markdown really flexible!  
-
-```{r, echo = FALSE}
-knitr::include_graphics("img/compile.png")
-```
 
 
 
@@ -1079,7 +1087,7 @@ params:
       team: "Pittsburgh Steelers"
 ```
 
-> - Access via params$team  
+> - Access via `params$team`  
 
 > - Can 'Knit with parameters'  
 
@@ -1095,7 +1103,7 @@ scoreData <- read_csv("https://github.com/jbpost2/IntermediateR/blob/master/data
 ```
 ```{r, eval = FALSE, echo = TRUE, message = FALSE}
 scoreData <- read_csv("https://github.com/jbpost2/
-											IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
+							IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
 ```
 ```{r, eval = TRUE, echo = TRUE, message = FALSE}
 reports <- tibble(
@@ -1235,7 +1243,7 @@ Previous interactivity happened in the browser
 - Review of Key Concepts  
 
 - R Markdown Basics  
-    + Code Chunks**
+    + Code Chunks
     + Images/Equations/Misc.
 
 - R Markdown Options
