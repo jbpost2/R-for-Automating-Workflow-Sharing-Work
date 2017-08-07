@@ -625,7 +625,9 @@ You can include:
 
 > - Use of headers can automatically create a Table of Contents!
 
-> - Include an image: ```![](path/to/file.png)```  
+> - Include an image: ```![](path/to/file.png)```    
+
+> - \`code\` becomes `code`  
 
 
 ## R Markdown Syntax
@@ -723,7 +725,12 @@ We've already seen how to include an R code chunk:
 knitr::include_graphics("img/chunk.png")
 ```   
 
-- Add chunk via typing it out or `Ctrl/Cmd + Alt + I`  
+- Add chunk via typing   
+\`\`\`{r}  
+code  
+\`\`\`
+
+- or `Ctrl/Cmd + Alt + I`  
 
 - Any R code can go into the chunk  
 
@@ -756,7 +763,7 @@ knitr::include_graphics("img/chunkRun.png")
 
 ## Notebook Functionality  
 
- - Allows for quick iteration within a chunk: editing and re-executing - when you’re happy, you move on and start a new chunk.
+ - Allows for quick iteration within a chunk: editing and re-executing - when you are happy, you move on and start a new chunk.
 
 > - Go back to markdown template document, execute code chunk in-line  
 
@@ -786,7 +793,7 @@ knitr::include_graphics("img/chunkRun.png")
 
 > - Code can be added in line:  Ex: Iris has `r length(iris$Sepal.Length)` observations  
 
-> - Added by beginning with back-tick `r` and ending with a back-tick
+> - Added by beginning with back-tick `r` and ending with a back-tick: Iris has \`r `length(iris$Sepal.Length)`\`
 
 
 ## Code Chunks  
@@ -840,9 +847,9 @@ Adding images in markdown: `![](path/to/file)`
 
 > - Use knitr or code chunk options to control size/scale!
 
-> - Ex:  {r graphics, out.width = "800px", echo = FALSE}
-knitr::include_graphics(path/to/file)
-
+> - Ex:  \`\`\`{r graphics, out.width = "800px", echo = FALSE}
+knitr::include_graphics(path/to/file)  
+\`\`\`
 
 
 ## Images/Equations and Misc.
