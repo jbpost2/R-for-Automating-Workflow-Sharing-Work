@@ -1,0 +1,90 @@
+---
+title: "NFL Reports"
+author: "Justin Post"
+date: "August 10-11, 2017"
+output: html_document  
+params: 
+      team: "Pittsburgh Steelers"
+---
+
+```{r setup, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+options(digits = 2)
+library(tidyverse)
+library(DT)
+```
+
+
+#Read in Team Data
+
+First we need to load the team data.  In the YAML header we created a `team` parameter.  We will load the full data and then use the `params$team` to access it.  These parameters **cannot** be modified using R code!  
+
+## Data read in 
+
+We'll use the `readr` and `dplyr` packags from the `tidyverse`.  The `filter` here just selects data from the `r params$team`.  
+
+```{r getData}
+NFLData <-read_csv("https://github.com/jbpost2/IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
+
+teamData <- filter(NFLData, 
+									 (awayTeam == params$team) | (homeTeam == params$team))
+```
+
+Selected columns from the data set are given below.  
+
+```{r printData}
+datatable(select(teamData, week, season, awayTeam, AQ2, AFinal, HQ2, HFinal))
+```
+
+
+#Obtain Yearly Summaries
+
+We'll look at just the difference in offensive statistics and defensive statistics (for instance, total yards - total yards given up) for each game.  This will be broken up by year and by home/away status.  
+
+
+```{r offensiveSummaries}
+homeStats <- teamData %>% filter(homeTeam == params$team) %>% transmute(season = season, Q2Diff = HQ2 - AQ2, scoreDiff = HFinal - AFinal, yardDiff = HtotalYds - AtotalYds, turnoverDiff = Hturnovers - Aturnovers, playDiff = HtotalPlays - AtotalPlays)
+
+awayStats <- teamData %>% filter(awayTeam == params$team) %>% transmute(season = season, Q2Diff = AQ2 - HQ2, scoreDiff = AFinal - HFinal, yardDiff = AtotalYds - HtotalYds, turnoverDiff = Aturnovers - Hturnovers, playDiff = AtotalPlays - HtotalPlays)
+
+homeStats$HomeAway <- rep("Home", length(homeStats$season))
+
+awayStats$HomeAway <- rep("Away", length(awayStats$season))
+
+stats <- rbind(homeStats, awayStats)
+```
+
+```{r create-avgData}
+avg <- stats %>% 
+	group_by(season, HomeAway) %>% 
+	summarise(Q2Avg = mean(Q2Diff), finalAvg = mean(scoreDiff), yardAvg = mean(yardDiff), turnoverAvg = mean(turnoverDiff), playAvg = mean(playDiff)) %>% 
+	ungroup()
+
+avg[ ,-1:-2] <- round(select(avg, Q2Avg:playAvg), 1)
+```
+
+The data we'll have to work with for plotting is given below.  
+
+```{r avgData}
+datatable(avg)
+```
+
+# Plots over season  
+
+Now we can create plots to see how the teams have done over the years.  
+
+```{r}
+#stack data to make legend easier
+scorePlotData <- data.frame(season = rep(avg$season, 2), 
+														scoreDiff = c(avg$Q2Avg, avg$finalAvg), 
+														gameTime = c(rep("2nd Q", length(avg$Q2Avg)),
+																				 rep("Final", length(avg$Q2Avg))), 
+														HomeAway = rep(avg$HomeAway, 2))
+
+scoresPlot <- ggplot(data = scorePlotData, aes(x = season, y = scoreDiff, color = HomeAway)) +
+	geom_line(aes(linetype =  gameTime), lwd = 1) +
+	ggtitle(label = paste0(params$team, " Score Differences"))
+
+scoresPlot
+```
