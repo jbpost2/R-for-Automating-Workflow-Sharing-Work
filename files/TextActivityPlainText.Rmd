@@ -1,0 +1,105 @@
+About the Data We'll Use  
+
+This presentation will represent a replication of some analysis done in the article Control factors and scale analysis of annual river water, sediments and carbon transport in China..  The data are available to download there but we will link to in on the gitHub web site for this course.  A description of the variables is available at http://www.nature.com/articles/srep25963/tables/1.  
+
+About the Analysis We'll Look At  
+	
+Numerical Summaries  
+	
+The analysis will go through things like finding means, counts, and standard deviations.  These summaries will be found for the variables below:  
+	
+Rc (Runoff coefficient - runoff depth divided by annual rainfall RD/total rainfall)  
+TSSC_mgPl (Total suspended sediment concentration (mg/L)	- average total suspended sediment concentration in the runoff)  
+
+Means will be found at each level of a new size variable.  The variable is created using the Size_km2 (watershed, catchment or basin area in km2) variable as described in the table below.  
+
+Size in km2    Size Classification 
+< 15000         'Small'
+< 100,000       'Medium'
+< 350,000       'Sizeable'
+< 700,000       'Large'
+>= 700,000      'Great'
+
+Graphical Summaries  
+
+Graphs will be made to visualize the data as well.  
+
+Boxplots  
+Histograms
+Scatter Plots  
+
+Reading in Data
+	
+We'll load the readr package to read in the data.
+
+library(readr)
+riverData <- read_csv("https://raw.githubusercontent.com/jbpost2/IntermediateR/master/datasets/river.csv")
+
+To create the new size variable we'll use the ifelse command and dplyr functions.  Then we'll order the levels for plotting purposes.
+
+library(dplyr)
+riverData <- riverData %>% 
+mutate(Size = ifelse(Size_km2 < 15000, "Small", 
+ifelse(Size_km2 < 100000, "Medium", 
+ifelse(Size_km2 < 350000, "Sizeable", 
+ifelse(Size_km2 < 700000, "Large", "Great")))))
+
+riverData$Size <- ordered(riverData$Size, levels = c("Small", "Medium", "Sizeable", "Large", "Great"))
+
+
+Later we'll use a binned version of the MAT variable (Mean annual temperature (degrees C)	- long-term mean annual temperature minus average temperature over 30 years or more) created here and also reordered.
+
+riverData <- riverData %>% 
+	mutate(MAT_Class = ifelse(MAP < 600, "Semiarid",
+														ifelse(MAP >= 600 & MAP < 850, "Moist", 
+																	 ifelse(MAP >= 850 & MAP < 1500, "Humid", "Wet"))))
+
+riverData$MAT_Class <- ordered(riverData$MAT_Class, levels = c("Semiarid", "Moist", "Humid", "Wet"))
+
+Analysis Part I  
+	
+The Rc Variable
+
+The dplyr package will be used for data manipulation and basic numeric summaries.  The means, counts, and standard deviations for each level of Size are given below.  
+
+riverData %>% group_by(Size) %>% summarise(mean(Rc, na.rm = TRUE))
+riverData %>% group_by(Size) %>% summarise(count = sum(!is.na(Rc)))
+riverData %>% group_by(Size) %>% summarise(sd = sd(Rc, na.rm = TRUE))
+
+The TSSC Variable
+
+The means, counts, and standard deviations for each level of Size are given below.  
+
+riverData %>% group_by(Size) %>% summarise(mean(TSSC_mgPl, na.rm = TRUE))
+riverData %>% group_by(Size) %>% summarise(count = sum(!is.na(TSSC_mgPl)))
+riverData %>% group_by(Size) %>% summarise(sd = sd(TSSC_mgPl, na.rm = TRUE))
+
+Analysis Part II  
+	
+Boxplots
+	
+The ggplot2 package will be used to create some fun plots to visualize the data.  First, a boxplot of the Rc variable for each level of Size where the means of each group are connected.  
+
+library(ggplot2)
+g <- ggplot(data = riverData, aes(x = Size, y = Rc))
+g + geom_boxplot(lwd = 1) + 
+	coord_cartesian(ylim = c(0, 1)) + 
+	labs(title = "Varying Trends of Rc Across Sizes", x = "Size") + 
+	geom_point(aes(col = MAT_Class), size = 4) + 
+	stat_summary(fun.y = mean, geom = "line", lwd = 2, aes(group = MAT_Class, col = MAT_Class))
+
+Histograms  
+
+Histograms of the Rc variable for each setting of Size are given below.
+
+g <- ggplot(data = riverData, aes(x = Rc))
+g + geom_histogram() + 
+	facet_grid(. ~ Size)
+
+Scatter Plots
+
+Lastly, scatter plots of the Rc variable and the TSSC variable are made for each combination of the Size and MAT_Class variables.  
+
+g <- ggplot(data = riverData, aes(x = Rc, y = TSSC_mgPl))  
+g + geom_point() + 
+	facet_grid(Size ~ MAT_Class)
