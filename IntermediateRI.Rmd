@@ -6,7 +6,6 @@ output:
       ioslides_presentation:
          css: css/style.css
          widescreen: true
-         runtime: shiny
 transition: faster
 logo: img/logo.png
 ---
