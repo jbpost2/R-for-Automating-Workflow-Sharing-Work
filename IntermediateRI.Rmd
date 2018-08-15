@@ -1,10 +1,12 @@
 ---
 title: "Intermediate Programming in R Part I"
 author: "Justin Post"
-date: "August 10-11, 2017"
+date: "August 16-17, 2018"
 output:       
       ioslides_presentation:
          css: css/style.css
+         widescreen: true
+         runtime: shiny
 transition: faster
 logo: img/logo.png
 ---
@@ -14,27 +16,25 @@ logo: img/logo.png
 library(dplyr)
 options(dplyr.print_min = 5)
 library(knitr)
-#opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+opts_chunk$set(echo = FALSE, message = FALSE, cache = TRUE)
 ```
 
 ## Course Schedule  
 
 **Daily agenda:**   
 
-- 10-11:10 Session  
+- 9:30-10:40 Session  
 - 10-minute break  
-- 11:20-12:30 Session  
-- 12:30-1:45 Lunch  
-- 1:45-2:55 Session  
+- 10:50-12:00 Session  
+- 12:00-1:15 Lunch  
+- 1:15-2:25 Session  
 - 10-minute break  
-- 3:05-4:15 Session  
+- 2:35-3:45 Session  
 
 
 ## What do we want to be able to do?
 
 - Communicate findings effectively 
-
-- Encompass and document entire data analysis process
 
 - Document findings 
 
@@ -46,7 +46,7 @@ library(knitr)
 
 ## Where do we start?  
 
-- Review of Key Concepts  
+- RStudio and Background Skills
 
 - R Markdown Basics  
     + Code Chunks
@@ -60,8 +60,7 @@ library(knitr)
 - R Shiny Applications/Presentations
 
 
-## Review of Concepts
-**R Studio**
+## RStudio
 
 - Great integrated development environment (IDE)  
 
@@ -72,20 +71,21 @@ library(knitr)
     + Console
     
 
-## Review of Concepts
-**R Studio** - Can rearrange panes
+## RStudio
+
+- Can rearrange panes
 
 ```{r panes.png, out.width = "800px",echo=FALSE}
 knitr::include_graphics("img/panes.png")
 ```
 
-- Global options --> Appearance allows font/background changes
+- Global options --> Appearance allows font/background changes  
+- Global options --> Code allows for soft-wrap of script files  
 
 
-## Review of Concepts
-**R Studio** - Project
+## RStudio - Project
 
-> - Often have many files associated with each analysis  
+- Often have many files associated with each analysis  
 
 > - Keeping different undertakings separate can be difficult!
 
@@ -100,8 +100,7 @@ knitr::include_graphics("img/panes.png")
     </ul>
 
 
-## Review of Concepts
-**R Studio** - Project
+## R Studio - Project
 
 - Easy to create!  
 
@@ -110,59 +109,13 @@ knitr::include_graphics("img/project.png")
 ```
 
 - Can save workspace, etc. and pick up right where you left off!  
-- Work on multiple projects at once  
+
+- Let's create one for today!  
+
+- Place the 'TextActivityPlainText.Rmd' file in the project folder  
 
 
-## Review of Concepts  
-**Data Frames**
-
-- Best R object for data sets
-- Collection (list) of vectors of the same **length**
-
-```{r iris-tibble}
-iris<-tbl_df(iris); iris
-```
-
-## Review of Concepts
-**Data Frames**  
-
-- Accessing elements: multiple ways
-
-```{r index-df1}
-iris[1:4, 2:4]
-```
-
-
-## Review of Concepts
-**Data Frames**  
-
-- Accessing elements: multiple ways
-
-```{r index-df2}
-iris[1, ]
-```
-
-
-## Review of Concepts
-**Data Frames**  
-
-- Accessing elements: multiple ways
-
-```{r index-df3}
-iris[ , c("Sepal.Length", "Species")]
-```
-
-
-## Review of Concepts
-**Data Frames**  
-
-- Accessing elements: multiple ways
-
-```{r index-df4}
-iris$Sepal.Length
-```
-
-## Review of Concepts  
+## Background R Material    
 **Packages**
 - Many ways to accomplish the same thing in R
 
@@ -173,7 +126,7 @@ iris$Sepal.Length
        <li>Good default settings on functions</li>  
      </ul>
      
-> - Base R has reasonable defaults and syntax but functions are slow  
+> - Base R has reasonable defaults and syntax but functions are slower and aren't consistent  
 
 > - "[TidyVerse](http://tidyverse.org/)" - collection of R packages that share common philosophies and are designed to work together!  
     <ul>
@@ -182,7 +135,7 @@ iris$Sepal.Length
     </ul>
 
 
-## Review of Concepts  
+## Background R Material   
 
 - If not installed (downloaded) on computer
 
@@ -191,8 +144,7 @@ install.packages("tidyverse")
 ```
 
 
-## Review of Concepts  
-
+## Background R Material  
 - Once installed, `library()` or `require()` to load
 ```{r tidyverse}
 library(tidyverse)
@@ -228,9 +180,61 @@ ggplot(iris, aes(x = Sepal.Width, y = Sepal.Length)) + geom_point()
 ```
 
 
-## Review of Concepts
+## Background R Material      
+**Data Frames**
 
-- Read in most any type of data with 
+- Best R object for data sets
+- Collection (list) of vectors of the same **length**
+
+```{r iris-tibble}
+iris<-tbl_df(iris); iris
+```
+
+## Background R Material  
+**Data Frames**  
+
+- Accessing elements: multiple ways
+
+```{r index-df1}
+iris[1:4, 2:4]
+```
+
+
+## Background R Material  
+**Data Frames**  
+
+- Accessing elements: multiple ways
+
+```{r index-df2}
+iris[1, ]
+```
+
+
+## Background R Material  
+**Data Frames**  
+
+- Accessing elements: multiple ways
+
+```{r index-df4}
+iris$Sepal.Length
+```
+
+
+## Background R Material  
+**Data Frames**  
+
+- Accessing elements: multiple ways
+
+```{r index-df3}
+#same result
+#iris[ , c("Sepal.Length", "Species")]
+select(iris, Sepal.Length, Species)
+```
+
+
+## Background R Material  
+
+- Read in most any type of data with packages
     + readr (.csv, delimited data)  
     + readxl (.xls, .xlsx)  
     + haven (.sav, .dta, .sas7bdat)  
@@ -241,7 +245,7 @@ votingData <- read_csv("https://raw.githubusercontent.com/
                        jbpost2/IntermediateR/master/datasets/counties.csv")
 ```
 
-## Review of Concepts  
+## Background R Material  
 
 ```{r votingDataE,eval=TRUE, echo=FALSE, message=FALSE}
 #read in data (readr, readxl, haven packages)
@@ -252,7 +256,7 @@ votingData
 ```
 
 
-## Review of Concepts  
+## Background R Material  
 **Piping or Chaining**
 
 - Applying multiple functions: nesting hard to parse!
@@ -260,7 +264,7 @@ votingData
 
 
 
-## Review of Concepts  
+## Background R Material  
 **Piping or Chaining**
 
 - Applying multiple functions: nesting hard to parse!
@@ -277,7 +281,7 @@ arrange(select(filter(votingData, ((state == "NC") & (college > 20))),
                county, msa, pop.density:turnout), college, desc(turnout))
 ```
 
-## Review of Concepts  
+## Background R Material  
 **Piping or Chaining**
 
 ```{r pipingE}
@@ -287,7 +291,7 @@ votingData %>%
   arrange(college, desc(turnout))
 ```
 
-## Review of Concepts  
+## Background R Material  
 **Plotting**  
 
 - R great for plotting  
@@ -304,7 +308,7 @@ votingData %>%
 > - Optional: Stat layer, titles, etc.
 
 
-## Review of Concepts  
+## Background R Material  
 `ggplot2` needs and syntax
 
 Needs:
@@ -323,36 +327,32 @@ g + geom_type(...) +
   labs(...)
 ```
 
-## Review of Concepts
+## Background R Material  
 
 - Settings that depend on a variable go in `aes`  
 
 ```{r ggplot-facet-exP,eval=FALSE,echo=TRUE,message=FALSE}
-g <- ggplot(votingData, aes(x = income, y = turnout)) +
-  geom_point(size = 0.5, aes(color = college)) +
+g <- ggplot(votingData, aes(x = income, y = turnout)) 
+g + geom_point(size = 0.5, aes(color = college)) +
   geom_smooth() +
   geom_rug() +
   facet_grid(region ~ .)
-g
 ```
 
-## Review of Concepts
+## Background R Material  
 
 ```{r ggplot-face-exE,eval=TRUE, echo=FALSE, message=FALSE}
-g <- ggplot(votingData, aes(x = income, y = turnout)) +
-  geom_point(size = 0.5, aes(color = college)) +
+g <- ggplot(votingData, aes(x = income, y = turnout))
+g +  geom_point(size = 0.5, aes(color = college)) +
   geom_smooth() +
   geom_rug() +
   facet_grid(region ~ .)
-g
 ```
 
 
 ## What do we want to be able to do?
 
 - Communicate findings effectively 
-
-- Encompass and document entire data analysis process  
 
 - Document findings 
 
@@ -392,7 +392,7 @@ knitr::include_graphics("img/process.png")
 
 - Can read data into R 
 
-- Know how to manipulate it  
+- Ability to manipulate it   
 
 - Likely know best ways to model and visualize it
 
@@ -406,10 +406,11 @@ knitr::include_graphics("img/process.png")
 
 - Formatting syntax for authoring HTML, PDF, slide shows, books, and more.  
 
-> - Digitial "Notebook":  Program that weaves word processing and code.  [Example](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/IntermediateRI.Rmd)  
+> - Digital "Notebook":  Program that weaves word processing and code.  [Example](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/IntermediateRI.Rmd)  
 
 > - Can do interactive documents! 
 
+> - [Intro video](https://www4.stat.ncsu.edu/~post/IntermediateR/video/Markdown.mp4)
 
 ## R Markdown Basics  
 **How to use Markdown?**  
@@ -418,19 +419,11 @@ Designed to be used in three ways (R for Data Science)
 
 > + Communicating to decision makers (focus on conclusions not code)
 
-> + Collaborating with other data scientists (including future you!)
+> + Collaborating with other data scientists (including future you!)  
 
 > + As environment to do data science (documents what you did and what you were thinking)
 
-
-## R Markdown Basics
-
-<iframe width="560" height="315" src="video/Markdown.mp4" frameborder="0" allowfullscreen></iframe>
-
-
-## R Markdown Basics  
-
-[Examples](http://rmarkdown.rstudio.com/gallery.html) of markdown documents
+> + [Examples](http://rmarkdown.rstudio.com/gallery.html) of markdown documents
 
 
 ## R Markdown Basics
@@ -459,9 +452,7 @@ Designed to be used in three ways (R for Data Science)
 R Markdown file contains three important types of content:
 
 > 1. (Optional) YAML header surrounded by `---`s  
-
 > 2. Chunks of R code surrounded by ```  
-
 > 3. Text mixed with simple text formatting like # heading and _italics_  
 
 
@@ -538,11 +529,11 @@ output: html_document
 knitr::include_graphics("img/chunk.png")
 ```  
 
-> - Start code chunk by typing it out or with CTRL/CMD + Alt + I
+> - Start code chunk by typing ```{r} out or with CTRL/CMD + Alt + I
 
 > - Code will be executed when document is created    
 
-> - Specify options about individual chunk here  
+> - Can specify options on individual code chunks  
 
 
 ## R Markdown Basics
@@ -561,7 +552,7 @@ includes both content as well as the output of any embedded R code
 chunks within the document. 
 ```
 
-- When file created, "##" becomes a header, "<...>" a link, and "**...**" bold font
+- When file created, "##" becomes a header, "<...>" a link, and ```**Knit**``` bold font
 
 
 ## R Markdown Basics  
@@ -592,9 +583,7 @@ chunks within the document.
 > - Work with interactivity (shiny)  
 
 
-## R Markdown Syntax  
-
-You can include:  
+## R Markdown Syntax Can Include...  
 
 > - Plain text  
 > - End a line with two spaces to start a new paragraph  
@@ -612,6 +601,8 @@ You can include:
 
 > - ```~~strikethrough~~```  becomes ~~strikethrough~~
 
+> - Modify text in your .Rmd file and click Knit -> Knit to HTML (at the top)  
+
 
 ## R Markdown Syntax  
 
@@ -628,6 +619,8 @@ You can include:
 > - Include an image: ```![](path/to/file.png)```    
 
 > - \`code\` becomes `code`  
+
+> - Modify text in your .Rmd file and click Knit -> Knit to HTML (at the top)  
 
 
 ## R Markdown Syntax
@@ -676,6 +669,10 @@ Table Header  | Second Header | Col 3
 Table Cell    | Cell (1, 2)   | Cell (1, 3)
 Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) 
 
+<br>  
+
+> - Add a list and a table in your .Rmd file and click Knit -> Knit to HTML (at the top)  
+
 
 ## Activity 
 
@@ -691,8 +688,6 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3)
 ## What do we want to be able to do?
 
 - Communicate findings effectively 
-
-- Encompass and document entire data analysis process
 
 - Document findings 
 
@@ -734,13 +729,16 @@ code
 
 - Any R code can go into the chunk  
 
+> - Code can be added in line:  Ex: Iris has `r length(iris$Sepal.Length)` observations  
+
+> - Added by beginning with back-tick `r` and ending with a back-tick: Iris has \`r `length(iris$Sepal.Length)`\`  
+
 
 ## Notebook Functionality  
 
 Data science notebook - virtual notebook environment used for literate programming  
 
 > - Pairs the functionality of word processing software with a programming language
-
 
 > - Rendered markdown document captures R code and process  
 
@@ -764,50 +762,57 @@ knitr::include_graphics("img/chunkRun.png")
 
 ## Notebook Functionality  
 
- - Allows for quick iteration within a chunk: editing and re-executing - when you are happy, you move on and start a new chunk.
-
-> - Go back to markdown template document, execute code chunk in-line  
+ - Allows for quick iteration within a chunk: editing and re-executing - when you are happy, you move on and start a new chunk.  
 
 > - Can run all code chunks with `Ctrl/Cmd + Alt + R`  
 
-> - Can develop code and record your thoughts - similar to classic lab notebook in the physical sciences
+> - Can develop code and record your thoughts - similar to classic lab notebook in the physical sciences  
+
+> - Go back to markdown template document, execute code chunk in-line and all code chunks.  Add an inline code piece.  
 
 
 ## Back to Code Chunks  
 
 - Many options depending on chunk purpose!    
 
-> - Can hide/show code with `echo = FALSE/TRUE`
+> - Can hide/show code with `echo = FALSE/TRUE`  
 
 > - Can choose if code is evaluated with `eval = TRUE/FALSE`   
 
 > - `Include = FALSE` is equivalent to `echo = FALSE, eval = TRUE`    
 
-> - Useful for set-up code (usually first chunk after YAML header) 
+> - `message = TRUE/FALSE` and `warning = TRUE/FALSE` can turn on/off displaying messages/warnings   
+
+> - `error = TRUE` allows file to be created with code that has an error  
 
 
-## Code Chunks  
+## Back to Code Chunks  
 
-- `message = TRUE/FALSE` and `warning = TRUE/FALSE` can turn on/off displaying messages/warnings   
+> - Options useful for set-up code (usually first chunk after YAML header) 
 
-> - `error = TRUE` allows file to be created with code that has an error
-
-> - Code can be added in line:  Ex: Iris has `r length(iris$Sepal.Length)` observations  
-
-> - Added by beginning with back-tick `r` and ending with a back-tick: Iris has \`r `length(iris$Sepal.Length)`\`
-
-
-## Code Chunks  
-
-Meantioned using `Include = FALSE` for 'set-up code' (usually first chunk after YAML header)  
-
-> - Can set global options for chunks  
+> - Can set global options for all chunks  
 
 > - Allows for easy change of audience!  
 
+
+## Back to Code Chunks  
+
+- Options useful for set-up code (usually first chunk after YAML header) 
+
+- Can set global options for all chunks  
+
+- Allows for easy change of audience!  
+
+For a higher up  
 ```
 opts_chunk$set(echo = FALSE, eval = TRUE, warning = FALSE)
 ```
+
+For a collaborator  
+```
+opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE)
+```
+
 
 ## Code Chunks  
 
@@ -848,7 +853,26 @@ In a large analysis it may take a long time to run code chunks/knit your documen
 
 > - Can do global option for caching!
 
-> - Delete folders created to rerun everything
+
+## Code Chunks
+
+In a large analysis it may take a long time to run code chunks/knit your document  
+
+ - Can "Cache" results!  Code will only rerun if it has changed.  
+
+ - Option to set up code dependencies using chunk names
+
+ - Use `cache = TRUE` in code chunk definition
+
+ - Can do global option for caching!
+
+```
+opts_chunk$set(cache = TRUE)
+```
+
+> - Delete folders created to rerun everything  
+
+> - Modify *global options* in `setup` R chunk after your YAML header.  Make changes and see differences!  (Local settings overwrite global.)  (Add `library(tidyverse)` to a code chunk to have messages that would pop up!)
 
 
 ## Images/Equations and Misc.
@@ -913,8 +937,6 @@ kable(summary(cars))
 ## What do we want to be able to do?
 
 - Communicate findings effectively 
-
-- Encompass and document entire data analysis process
 
 - Document findings 
 
@@ -1025,9 +1047,12 @@ output: pdf_document
 output: word_document
 ```
 
+> - Go back to template, change output type and knit.  Add [some HTML options](https://bookdown.org/yihui/rmarkdown/html-document.html) and [PDF options](https://bookdown.org/yihui/rmarkdown/pdf-document.html) (careful to drop down lines and use spacing as done in documentation).
+
+
 ## Common Outputs  
 
-Presentations/Slides  
+Presentations/Slides (new slides with `##`)  
 
 > - `output: ioslides_presentation` - HTML presentation
 
@@ -1038,7 +1063,7 @@ Presentations/Slides
 
 ## Common Outputs  
 
-Presentations/Slides  
+Presentations/Slides (new slides with `##`)   
 
 - `output: ioslides_presentation` - HTML presentation
 
@@ -1049,84 +1074,13 @@ Presentations/Slides
 - Shiny (covered later) slides   
 
 ```
+runtime: shiny
 output: html_document
-runtime: shinyShiny Slides
 ```
-
-## Common Outputs  
-
-Can create more than one document at a time!  
-
-- Just add another output statement in the YAML header  
-
+or 
 ```
-output:
-  html_document:
-    toc: true
-    toc_float: true
-  word_document: default 
-
-```
-Then use code:  
-
-`rmarkdown::render("file.Rmd", output_format = "all")`
-
-
-## Parameters  
-
-Parameters can be added to the YAML header  
-
- - Can help to automate reports!
-
-```
-title: "NFL Reports"
-author: "Justin Post"
-date: "August 10-11, 2017"
-output: html_document  
-params: 
-      team: "Pittsburgh Steelers"
-```
-
-> - Access via `params$team`  
-
-> - Can 'Knit with parameters'  
-
-> - Example: Let's open up the [NFL.Rmd document](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/NFL.Rmd)
-
-
-## Automation of Documents  
-
-- Create data frame for each class (here team)  
-
-```{r, eval = TRUE, echo = FALSE, message = FALSE}
-scoreData <- read_csv("https://github.com/jbpost2/IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
-```
-```{r, eval = FALSE, echo = TRUE, message = FALSE}
-scoreData <- read_csv("https://github.com/jbpost2/
-							IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
-```
-```{r, eval = TRUE, echo = TRUE, message = FALSE}
-reports <- tibble(
-  teamIDs = unique(scoreData$awayTeam),
-  filename = stringr::str_c("TeamID-", teamIDs, ".html"),
-  params = purrr::map(teamIDs, ~ list(team = .))
-)
-```
-
-## Automation of Documents  
-
-```{r}
-reports
-```
-
-## Automation of Documents  
-
-Now knit via the following code:
-
-```{r, eval = FALSE}
-reports %>% 
-  select(output_file = filename, params) %>% 
-  purrr::pwalk(rmarkdown::render, input = "NFL.Rmd")
+runtime: shiny
+output: ioslides_presentation
 ```
 
 ## Interactivity  
@@ -1213,22 +1167,9 @@ Previous interactivity happened in the browser
 > - Examples: [Shiny Showcase](https://www.rstudio.com/products/shiny/shiny-user-showcase/), [Shiny Gallery](https://shiny.rstudio.com/gallery/) 
 
 
-## Activity 
-
-- [**Outputs and Interactivity Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/OutputsActivity.html) available on web  
-
-- Work in small groups  
-
-- Ask questions!  TAs and I will float about the room  
-
-- Feel free to ask questions about anything you didn't understand as well!  
-
-
 ## What do we want to be able to do?
 
 - Communicate findings effectively 
-
-- Encompass and document entire data analysis process
 
 - Document findings 
 
@@ -1252,3 +1193,73 @@ Previous interactivity happened in the browser
     + Interactive Components
 
 - R Shiny Applications/Presentations
+
+## Activity 
+
+- [**Outputs and Interactivity Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/OutputsActivity.html) available on web  
+
+- Work in small groups  
+
+- Ask questions!  TAs and I will float about the room  
+
+- Feel free to ask questions about anything you didn't understand as well!  
+
+
+## Parameters (Advanced)  
+
+Parameters can be added to the YAML header  
+
+ - Can help to automate reports!
+
+```
+title: "NFL Reports"
+author: "Justin Post"
+date: "August 2018"
+output: html_document  
+params: 
+      team: "Pittsburgh Steelers"
+```
+
+> - Access via `params$team`  
+
+> - Can 'Knit with parameters'  
+
+> - Example: Let's open up the [NFL.Rmd document](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/NFL.Rmd)
+
+
+## Parameters (Advanced)   
+
+- Create data frame for each class (here team)  
+
+```{r, eval = TRUE, echo = FALSE, message = FALSE}
+scoreData <- read_csv("https://github.com/jbpost2/IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
+```
+```{r, eval = FALSE, echo = TRUE, message = FALSE}
+scoreData <- read_csv("https://github.com/jbpost2/
+		IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
+```
+```{r, eval = TRUE, echo = TRUE, message = FALSE}
+reports <- tibble(
+  teamIDs = unique(scoreData$awayTeam),
+  filename = stringr::str_c("TeamID-", teamIDs, ".html"),
+  params = purrr::map(teamIDs, ~ list(team = .))
+)
+```
+
+## Parameters (Advanced) 
+
+```{r}
+reports
+```
+
+## Parameters (Advanced) 
+
+Now knit via the following code:
+
+```{r, eval = FALSE, echo = TRUE}
+reports %>% 
+  select(output_file = filename, params) %>% 
+  purrr::pwalk(rmarkdown::render, input = "NFL.Rmd")
+```
+
+
