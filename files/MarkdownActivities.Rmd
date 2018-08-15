@@ -1,7 +1,7 @@
 ---
 title: "Analysis of River Data Set"
 author: "your_name_here"
-date: "August 10, 2017"
+date: "August 2018"
 output: html_document
 ---
 
@@ -48,7 +48,7 @@ Graphs will be made to visualize the data as well.
 
 We'll load the `readr` package to read in the data.
 
-```{r}
+```{r, echo = FALSE, message = FALSE}
 library(readr)
 riverData <- read_csv("https://raw.githubusercontent.com/jbpost2/IntermediateR/master/datasets/river.csv")
 ```
@@ -87,10 +87,10 @@ riverData$MAT_Class <- ordered(riverData$MAT_Class, levels = c("Semiarid", "Mois
 
 The `dplyr` package will be used for data manipulation and basic numeric summaries.  The means, counts, and standard deviations for each level of Size are given below.  
 
-```{r}
+```{r, eval = FALSE}
 riverData %>% group_by(Size) %>% summarise(mean(Rc, na.rm = TRUE))
 riverData %>% group_by(Size) %>% summarise(count = sum(!is.na(Rc)))
-riverData %>% group_by(Size) %>% summarise(sd = sd(Rc, na.rm = TRUE))
+riverData %>% group_by(Size) %>% summarise(var = var(Rc, na.rm = TRUE))
 ```
 
 ## The TSSC Variable

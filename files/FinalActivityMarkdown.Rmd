@@ -1,12 +1,11 @@
 ---
 title: "Analysis of River Data Set"
 author: "your_name_here"
-date: "August 10, 2017"
+date: "August 2018"
 output:
-  html_document:
-    toc: true
-    toc_float: true
-    code_folding: hide
+  html_document:  
+    toc: true  
+    code_folding: hide  
 ---
 
 ```{r, include=FALSE}
