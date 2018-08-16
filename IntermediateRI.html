@@ -328,11 +328,15 @@ Common syntax
 <li>If not installed (downloaded) on computer</li>
 </ul>
 
+<pre class = 'prettyprint lang-r'>install.packages(&quot;tidyverse&quot;)</pre>
+
 </article></slide><slide class=""><hgroup><h2>Background R Material</h2></hgroup><article  id="background-r-material-2">
 
 <ul>
 <li>Once installed, <code>library()</code> or <code>require()</code> to load</li>
 </ul>
+
+<pre class = 'prettyprint lang-r'>library(tidyverse)</pre>
 
 </article></slide><slide class=""><hgroup><h2>Tidyverse Syntax</h2></hgroup><article  id="tidyverse-syntax">
 
@@ -362,6 +366,9 @@ Common syntax
 <li><p>Examples:</p></li>
 </ul>
 
+<pre class = 'prettyprint lang-r'>select(iris, Sepal.Width)
+ggplot(iris, aes(x = Sepal.Width, y = Sepal.Length)) + geom_point()</pre>
+
 </article></slide><slide class=""><hgroup><h2>Background R Material</h2></hgroup><article  id="background-r-material-3">
 
 <p><strong>Data Frames</strong></p>
@@ -370,6 +377,8 @@ Common syntax
 <li>Best R object for data sets</li>
 <li>Collection (list) of vectors of the same <strong>length</strong></li>
 </ul>
+
+<pre class = 'prettyprint lang-r'>iris&lt;-tbl_df(iris); iris</pre>
 
 <pre >## # A tibble: 150 x 5
 ##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
@@ -389,6 +398,8 @@ Common syntax
 <li>Accessing elements: multiple ways</li>
 </ul>
 
+<pre class = 'prettyprint lang-r'>iris[1:4, 2:4]</pre>
+
 <pre >## # A tibble: 4 x 3
 ##   Sepal.Width Petal.Length Petal.Width
 ##         &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
@@ -405,6 +416,8 @@ Common syntax
 <li>Accessing elements: multiple ways</li>
 </ul>
 
+<pre class = 'prettyprint lang-r'>iris[1, ]</pre>
+
 <pre >## # A tibble: 1 x 5
 ##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ##          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
@@ -417,6 +430,8 @@ Common syntax
 <ul>
 <li>Accessing elements: multiple ways</li>
 </ul>
+
+<pre class = 'prettyprint lang-r'>iris$Sepal.Length</pre>
 
 <pre >##   [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 4.4 4.9 5.4 4.8 4.8 4.3 5.8 5.7 5.4
 ##  [18] 5.1 5.7 5.1 5.4 5.1 4.6 5.1 4.8 5.0 5.0 5.2 5.2 4.7 4.8 5.4 5.2 5.5
@@ -435,6 +450,10 @@ Common syntax
 <ul>
 <li>Accessing elements: multiple ways</li>
 </ul>
+
+<pre class = 'prettyprint lang-r'>#same result
+#iris[ , c(&quot;Sepal.Length&quot;, &quot;Species&quot;)]
+select(iris, Sepal.Length, Species)</pre>
 
 <pre >## # A tibble: 150 x 2
 ##   Sepal.Length Species
@@ -458,7 +477,13 @@ Common syntax
 </ul></li>
 </ul>
 
+<pre class = 'prettyprint lang-r'>#read in data (readr, readxl, haven packages)
+votingData &lt;- read_csv(&quot;https://raw.githubusercontent.com/
+                       jbpost2/IntermediateR/master/datasets/counties.csv&quot;)</pre>
+
 </article></slide><slide class=""><hgroup><h2>Background R Material</h2></hgroup><article  id="background-r-material-9">
+
+<pre class = 'prettyprint lang-r'>votingData</pre>
 
 <pre >## # A tibble: 3,141 x 20
 ##   region county state   msa  pmsa pop.density   pop pop.change age6574
@@ -491,9 +516,23 @@ Common syntax
 <li>If <code>dplyr</code> or <code>magrittr</code> package loaded, can use anywhere</li>
 </ul>
 
+<pre class = 'prettyprint lang-r'>#Consider
+votingData %&gt;% 
+  filter((state == &quot;NC&quot;) &amp; (college &gt; 20)) %&gt;% 
+  select(county, msa, pop.density:turnout) %&gt;% 
+  arrange(college, desc(turnout))
+#vs
+arrange(select(filter(votingData, ((state == &quot;NC&quot;) &amp; (college &gt; 20))), 
+               county, msa, pop.density:turnout), college, desc(turnout))</pre>
+
 </article></slide><slide class=""><hgroup><h2>Background R Material</h2></hgroup><article  id="background-r-material-12">
 
 <p><strong>Piping or Chaining</strong></p>
+
+<pre class = 'prettyprint lang-r'>votingData %&gt;% 
+  filter((state == &quot;NC&quot;) &amp; (college &gt; 20)) %&gt;% 
+  select(county, msa, pop.density:turnout) %&gt;% 
+  arrange(college, desc(turnout))</pre>
 
 <pre >## # A tibble: 11 x 17
 ##    county   msa pop.density    pop pop.change age6574 age75 crime college
@@ -555,6 +594,11 @@ Ex: size, color, and x, y location(s)
 <li><p>Optional: Stat layer, titles, etc.</p></li>
 <li><p>Syntax:</p></li>
 </ul>
+
+<pre class = 'prettyprint lang-r'>g &lt;- ggplot(dataframe,aes(x = , y = , ...))
+g + geom_type(...) +
+  stat_type(...) + 
+  labs(...)</pre>
 
 </article></slide><slide class=""><hgroup><h2>Background R Material</h2></hgroup><article  id="background-r-material-15">
 
@@ -1528,6 +1572,17 @@ datatable(iris)</pre>
 <li>3d scatterplots with <code>rthreejs</code> package</li>
 </ul>
 
+<pre class = 'prettyprint lang-r'>if(!require(&quot;devtools&quot;)) install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;bwlewis/rthreejs&quot;)
+
+library(threejs)
+
+scatterplot3js(x = iris$Sepal.Width, y = iris$Sepal.Length, 
+                             z = iris$Petal.Width, color = 
+                                c(rep(&quot;blue&quot;, 50), rep(&quot;red&quot;, 50), 
+                                    rep(&quot;green&quot;, 50)), 
+                             size = 0.5)</pre>
+
 </article></slide><slide class=""><hgroup><h2>Interactivity</h2></hgroup><article  id="interactivity-5">
 
 <div id="htmlwidget-13072b15c490708de1b1" style="width:720px;height:432px;" class="scatterplotThree html-widget"></div>
@@ -1638,6 +1693,8 @@ params:
 )</pre>
 
 </article></slide><slide class=""><hgroup><h2>Parameters (Advanced)</h2></hgroup><article  id="parameters-advanced-2">
+
+<pre class = 'prettyprint lang-r'>reports</pre>
 
 <pre >## # A tibble: 32 x 3
 ##   teamIDs             filename                        params    

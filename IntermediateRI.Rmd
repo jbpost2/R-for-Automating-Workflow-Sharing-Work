@@ -15,7 +15,7 @@ logo: img/logo.png
 library(dplyr)
 options(dplyr.print_min = 5)
 library(knitr)
-opts_chunk$set(echo = FALSE, message = FALSE, cache = TRUE)
+opts_chunk$set(message = FALSE, cache = TRUE)
 ```
 
 ## Course Schedule  
