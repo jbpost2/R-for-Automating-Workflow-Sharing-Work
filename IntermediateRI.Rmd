@@ -15,7 +15,7 @@ logo: img/logo.png
 library(dplyr)
 options(dplyr.print_min = 5)
 library(knitr)
-opts_chunk$set(message = FALSE, cache = TRUE)
+opts_chunk$set(message = FALSE, cache = TRUE, warning = FALSE)
 ```
 
 ## Course Schedule  
@@ -91,7 +91,7 @@ Nice functionality for
 
 - Easy to create!  
 
-```{r project.png, out.width = "600px",echo=FALSE}
+```{r project.png, out.width = "600px",echo=FALSE, fig.align = "center"}
 knitr::include_graphics("img/project.png")
 ```
 
@@ -99,7 +99,7 @@ knitr::include_graphics("img/project.png")
 
 - Let's create one for today!  
 
-- Place the [TextActivityPlainText.Rmd]("https://raw.githubusercontent.com/jbpost2/IntermediateR/master/files/TextActivityPlainText.Rmd") file in the project folder  
+- Place the [TextActivityPlainText.Rmd](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/files/TextActivityPlainText.Rmd) file in the project folder  
 
 
 ## R Markdown Basics  
@@ -369,17 +369,19 @@ chunks within the document.
 ## R Markdown Syntax
 
 - Can do lists: be sure to end each line with two spaces!  
-  + Indent sub lists two spaces (I often do four for both) 
+  + Indent sub lists four spaces   
 
 <div style = "float: left; width: 50%">
 ```
 * unordered list  
 * item 2  
+
   + sub-item 1  
   + sub-item 2  
 
 1. ordered list  
 2. item 2  
+
   + sub-item 1  
   + sub-item 2  
 ```  
@@ -387,11 +389,13 @@ chunks within the document.
 <div style = "float: right; width: 50%">
 * unordered list  
 * item 2  
+
     + sub-item 1  
     + sub-item 2  
 
 1. ordered list  
 2. item 2  
+
     + sub-item 1  
     + sub-item 2  
 </div>
@@ -502,7 +506,7 @@ Data science notebook - virtual notebook environment used for literate programmi
  - R Markdown brings together the console and the script editor too!  
  - Rendered markdown document captures R code and process  
 
-[NHL Example html]("https://github.com/jbpost2/IntermediateR/blob/master/files/GetData.html?raw=true"), [NHL Example Rmd]("https://raw.githubusercontent.com/jbpost2/IntermediateR/master/files/GetData.Rmd")
+[NHL Example html](https://github.com/jbpost2/IntermediateR/blob/master/files/GetData.html?raw=true), [NHL Example Rmd](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/files/GetData.Rmd)
 
 
 
@@ -778,7 +782,6 @@ output:
 ## Common Outputs  
 
 - PDF  
-  + May want to install LaTeX for equations  
 
 ```
 output: pdf_document   
@@ -788,7 +791,6 @@ output: pdf_document
 ## Common Outputs  
 
 - PDF  
-  + May want to install LaTeX for equations  
 
 ```
 output: pdf_document   
@@ -801,7 +803,18 @@ output: pdf_document
 output: word_document
 ```
 
-> - Go back to template, change output type and knit.  Add [some HTML options](https://bookdown.org/yihui/rmarkdown/html-document.html) (careful to drop down lines and use spacing as done in documentation).
+> - Go back to template, change output type to word and knit.  Add [some HTML options](https://bookdown.org/yihui/rmarkdown/html-document.html) (careful to drop down lines and use spacing as done in documentation).
+
+
+## Creating PDFs  
+
+- Can change type of output to PDF  
+
+- Many [PDF options](https://bookdown.org/yihui/rmarkdown/pdf-document.html)  
+
+- Rendering to PDF can be a bit difficult to set up if you don't do latex  
+
+- Go through [this document](https://github.com/jbpost2/IntermediateR/raw/master/files/MarkdownOutputToPDF.pdf) (we'll come help!) to set things up  
 
 
 ## Common Outputs  
@@ -921,16 +934,7 @@ Previous interactivity happened in the browser
 > - Examples: [Shiny Showcase](https://www.rstudio.com/products/shiny/shiny-user-showcase/), [Shiny Gallery](https://shiny.rstudio.com/gallery/) 
 
 
-##Creating PDFs  
-
-- Can change type of output to PDF  
-
-- Many [PDF options](https://bookdown.org/yihui/rmarkdown/pdf-document.html)  
-
-- Rendering to PDF can be a bit difficult to set up if you don't do latex  
-
-- Go through [this document](https://github.com/jbpost2/IntermediateR/raw/master/files/MarkdownOutputToPDF.pdf) (we'll come help!) to set things up  
-
+##Activity  
 
 - [**Outputs and Interactivity Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/OutputsActivity.html) available on web  
 
