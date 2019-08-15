@@ -99,7 +99,7 @@ knitr::include_graphics("img/project.png")
 
 - Let's create one for today!  
 
-- Place the [TextActivityPlainText.Rmd]("files/TextActivityPlainText.Rmd") file in the project folder  
+- Place the [TextActivityPlainText.Rmd]("https://raw.githubusercontent.com/jbpost2/IntermediateR/master/files/TextActivityPlainText.Rmd") file in the project folder  
 
 
 ## R Markdown Basics  
@@ -502,7 +502,7 @@ Data science notebook - virtual notebook environment used for literate programmi
  - R Markdown brings together the console and the script editor too!  
  - Rendered markdown document captures R code and process  
 
-[NHL Example html]("files/GetData.html"), [NHL Example Rmd]("files/GetData.Rmd")
+[NHL Example html]("https://github.com/jbpost2/IntermediateR/blob/master/files/GetData.html?raw=true"), [NHL Example Rmd]("https://raw.githubusercontent.com/jbpost2/IntermediateR/master/files/GetData.Rmd")
 
 
 
@@ -610,7 +610,7 @@ In a large analysis it may take a long time to run code chunks/knit your documen
 
 > - Use `cache = TRUE` in code chunk definition
 
-> - Can do global option for caching!
+> - Delete folders created to rerun everything  
 
 
 ## Code Chunks
@@ -623,15 +623,13 @@ In a large analysis it may take a long time to run code chunks/knit your documen
 
  - Use `cache = TRUE` in code chunk definition
 
- - Can do global option for caching!
+ - Delete folders created to rerun everything  
+
+ - Modify *global options* in `setup` R chunk after your YAML header.  Make changes and see differences!  (Local settings overwrite global.)  (Add `library(tidyverse)` to a code chunk to have messages that would pop up!)
 
 ```
 opts_chunk$set(cache = TRUE)
 ```
-
-> - Delete folders created to rerun everything  
-
-> - Modify *global options* in `setup` R chunk after your YAML header.  Make changes and see differences!  (Local settings overwrite global.)  (Add `library(tidyverse)` to a code chunk to have messages that would pop up!)
 
 
 ## Images/Equations and Misc.
@@ -685,7 +683,6 @@ kable(summary(cars))
 
 - [**Using Notebook Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/NotebookActivity.html) available on web  
 
-- Work in small groups  
 
 - Ask questions!  TAs and I will float about the room  
 
@@ -706,8 +703,6 @@ kable(summary(cars))
 
 
 ## Where are we at?  
-
-- Review of Key Concepts  
 
 - R Markdown Basics  
     + Code Chunks
@@ -806,7 +801,7 @@ output: pdf_document
 output: word_document
 ```
 
-> - Go back to template, change output type and knit.  Add [some HTML options](https://bookdown.org/yihui/rmarkdown/html-document.html) and [PDF options](https://bookdown.org/yihui/rmarkdown/pdf-document.html) (careful to drop down lines and use spacing as done in documentation).
+> - Go back to template, change output type and knit.  Add [some HTML options](https://bookdown.org/yihui/rmarkdown/html-document.html) (careful to drop down lines and use spacing as done in documentation).
 
 
 ## Common Outputs  
@@ -924,6 +919,17 @@ Previous interactivity happened in the browser
 > - Only con: Requires R running somewhere
 
 > - Examples: [Shiny Showcase](https://www.rstudio.com/products/shiny/shiny-user-showcase/), [Shiny Gallery](https://shiny.rstudio.com/gallery/) 
+
+
+##Creating PDFs  
+
+- Can change type of output to PDF  
+
+- Many [PDF options](https://bookdown.org/yihui/rmarkdown/pdf-document.html)  
+
+- Rendering to PDF can be a bit difficult to set up if you don't do latex  
+
+- Go through [this document (we'll come help!) to set things up  
 
 
 ## What do we want to be able to do?
