@@ -249,7 +249,7 @@ Source documents
 <ul>
 <li><p>Can save workspace, etc. and pick up right where you left off!</p></li>
 <li><p>Let&#39;s create one for today!</p></li>
-<li><p>Place the <a href='%22files/TextActivityPlainText.Rmd%22' title=''>TextActivityPlainText.Rmd</a> file in the project folder</p></li>
+<li><p>Place the <a href='%22https://raw.githubusercontent.com/jbpost2/IntermediateR/master/files/TextActivityPlainText.Rmd%22' title=''>TextActivityPlainText.Rmd</a> file in the project folder</p></li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>R Markdown Basics</h2></hgroup><article  id="r-markdown-basics">
@@ -771,7 +771,7 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) </pre>
 <li><p>Rendered markdown document captures R code and process</p></li>
 </ul>
 
-<p><a href='%22files/GetData.html%22' title=''>NHL Example html</a>, <a href='%22files/GetData.Rmd%22' title=''>NHL Example Rmd</a></p>
+<p><a href='%22https://github.com/jbpost2/IntermediateR/blob/master/files/GetData.html?raw=true%22' title=''>NHL Example html</a>, <a href='%22https://raw.githubusercontent.com/jbpost2/IntermediateR/master/files/GetData.Rmd%22' title=''>NHL Example Rmd</a></p>
 
 </article></slide><slide class=""><hgroup><h2>Notebook Functionality</h2></hgroup><article  id="notebook-functionality-1">
 
@@ -904,7 +904,7 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) </pre>
 </ul>
 
 <ul class = 'build'>
-<li>Can do global option for caching!</li>
+<li>Delete folders created to rerun everything</li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Code Chunks</h2></hgroup><article  id="code-chunks-4">
@@ -915,18 +915,11 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) </pre>
 <li><p>Can &quot;Cache&quot; results! Code will only rerun if it has changed.</p></li>
 <li><p>Option to set up code dependencies using chunk names</p></li>
 <li><p>Use <code>cache = TRUE</code> in code chunk definition</p></li>
-<li><p>Can do global option for caching!</p></li>
+<li><p>Delete folders created to rerun everything</p></li>
+<li><p>Modify <em>global options</em> in <code>setup</code> R chunk after your YAML header. Make changes and see differences! (Local settings overwrite global.) (Add <code>library(tidyverse)</code> to a code chunk to have messages that would pop up!)</p></li>
 </ul>
 
 <pre >opts_chunk$set(cache = TRUE)</pre>
-
-<ul class = 'build'>
-<li>Delete folders created to rerun everything</li>
-</ul>
-
-<ul class = 'build'>
-<li>Modify <em>global options</em> in <code>setup</code> R chunk after your YAML header. Make changes and see differences! (Local settings overwrite global.) (Add <code>library(tidyverse)</code> to a code chunk to have messages that would pop up!)</li>
-</ul>
 
 </article></slide><slide class=""><hgroup><h2>Images/Equations and Misc.</h2></hgroup><article  id="imagesequations-and-misc.">
 
@@ -1039,7 +1032,6 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) </pre>
 
 <ul>
 <li><p><a href='http://www4.stat.ncsu.edu/~post/IntermediateR/NotebookActivity.html' title=''><strong>Using Notebook Activity</strong> instructions</a> available on web</p></li>
-<li><p>Work in small groups</p></li>
 <li><p>Ask questions! TAs and I will float about the room</p></li>
 <li><p>Feel free to ask questions about anything you didn&#39;t understand as well!</p></li>
 </ul>
@@ -1056,7 +1048,6 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) </pre>
 </article></slide><slide class=""><hgroup><h2>Where are we at?</h2></hgroup><article  id="where-are-we-at-1">
 
 <ul>
-<li><p>Review of Key Concepts</p></li>
 <li>R Markdown Basics
 
 <ul>
@@ -1070,7 +1061,7 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) </pre>
 <li>Presentations: Slides</li>
 <li>Interactive Components</li>
 </ul></li>
-<li><p>R Shiny Applications/Presentations</p></li>
+<li>R Shiny Applications/Presentations</li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Common Outputs</h2></hgroup><article  id="common-outputs">
@@ -1144,7 +1135,7 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3) </pre>
 <pre >output: word_document</pre>
 
 <ul class = 'build'>
-<li>Go back to template, change output type and knit. Add <a href='https://bookdown.org/yihui/rmarkdown/html-document.html' title=''>some HTML options</a> and <a href='https://bookdown.org/yihui/rmarkdown/pdf-document.html' title=''>PDF options</a> (careful to drop down lines and use spacing as done in documentation).</li>
+<li>Go back to template, change output type and knit. Add <a href='https://bookdown.org/yihui/rmarkdown/html-document.html' title=''>some HTML options</a> (careful to drop down lines and use spacing as done in documentation).</li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Common Outputs</h2></hgroup><article  id="common-outputs-6">
@@ -1261,6 +1252,16 @@ scatterplot3js(x = iris$Sepal.Width, y = iris$Sepal.Length,
 <li>Examples: <a href='https://www.rstudio.com/products/shiny/shiny-user-showcase/' title=''>Shiny Showcase</a>, <a href='https://shiny.rstudio.com/gallery/' title=''>Shiny Gallery</a></li>
 </ul>
 
+</article></slide><slide class=""><hgroup><h2>Creating PDFs</h2></hgroup><article  id="creating-pdfs">
+
+<ul>
+<li><p>Can change type of output to PDF</p></li>
+<li><p>Many <a href='https://bookdown.org/yihui/rmarkdown/pdf-document.html' title=''>PDF options</a></p></li>
+<li><p>Rendering to PDF can be a bit difficult to set up if you don&#39;t do latex</p></li>
+<li><p>Go through <a href='https://github.com/jbpost2/IntermediateR/raw/master/files/MarkdownOutputToPDF.pdf' title=''>this document</a> (we&#39;ll come help!) to set things up</p></li>
+<li><p><a href='http://www4.stat.ncsu.edu/~post/IntermediateR/OutputsActivity.html' title=''><strong>Outputs and Interactivity Activity</strong> instructions</a> available on web</p></li>
+</ul>
+
 </article></slide><slide class=""><hgroup><h2>What do we want to be able to do?</h2></hgroup><article  id="what-do-we-want-to-be-able-to-do-3">
 
 <ul>
@@ -1273,7 +1274,6 @@ scatterplot3js(x = iris$Sepal.Width, y = iris$Sepal.Length,
 </article></slide><slide class=""><hgroup><h2>Where are we at?</h2></hgroup><article  id="where-are-we-at-2">
 
 <ul>
-<li><p>Review of Key Concepts</p></li>
 <li>R Markdown Basics
 
 <ul>
@@ -1287,16 +1287,7 @@ scatterplot3js(x = iris$Sepal.Width, y = iris$Sepal.Length,
 <li>Presentations: Slides</li>
 <li>Interactive Components</li>
 </ul></li>
-<li><p>R Shiny Applications/Presentations</p></li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Activity</h2></hgroup><article  id="activity-2">
-
-<ul>
-<li><p><a href='http://www4.stat.ncsu.edu/~post/IntermediateR/OutputsActivity.html' title=''><strong>Outputs and Interactivity Activity</strong> instructions</a> available on web</p></li>
-<li><p>Work in small groups</p></li>
-<li><p>Ask questions! TAs and I will float about the room</p></li>
-<li><p>Feel free to ask questions about anything you didn&#39;t understand as well!</p></li>
+<li>R Shiny Applications/Presentations</li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Parameters (Advanced)</h2></hgroup><article  id="parameters-advanced">
@@ -1335,10 +1326,12 @@ params:
 <pre class = 'prettyprint lang-r'>scoreData &lt;- read_csv(&quot;https://github.com/jbpost2/
         IntermediateR/blob/master/datasets/scoresFull.csv?raw=true&quot;)</pre>
 
-<pre class = 'prettyprint lang-r'>reports &lt;- tibble(
-  teamIDs = unique(scoreData$awayTeam),
-  filename = stringr::str_c(&quot;TeamID-&quot;, teamIDs, &quot;.html&quot;),
-  params = purrr::map(teamIDs, ~ list(team = .))
+<pre class = 'prettyprint lang-r'>teamIDs &lt;- unique(scoreData$awayTeam)
+reports &lt;- tibble(
+  teamIDs = teamIDs,
+  filename = paste0(&quot;TeamID-&quot;, teamIDs, &quot;.html&quot;)
+,
+  params = lapply(teamIDs, FUN = function(x){list(team = x)})
 )</pre>
 
 </article></slide><slide class=""><hgroup><h2>Parameters (Advanced)</h2></hgroup><article  id="parameters-advanced-2">
@@ -1361,7 +1354,8 @@ params:
 
 <pre class = 'prettyprint lang-r'>reports %&gt;% 
   select(output_file = filename, params) %&gt;% 
-  purrr::pwalk(rmarkdown::render, input = &quot;NFL.Rmd&quot;)</pre></article></slide>
+  purrr::pwalk(rmarkdown::render, input = &quot;NFL.Rmd&quot;)
+#pwalk applies the function render with the arguments given</pre></article></slide>
 
 
   <slide class="backdrop"></slide>

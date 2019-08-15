@@ -929,7 +929,11 @@ Previous interactivity happened in the browser
 
 - Rendering to PDF can be a bit difficult to set up if you don't do latex  
 
-- Go through [this document (we'll come help!) to set things up  
+- Go through [this document](https://github.com/jbpost2/IntermediateR/raw/master/files/MarkdownOutputToPDF.pdf) (we'll come help!) to set things up  
+
+
+- [**Outputs and Interactivity Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/OutputsActivity.html) available on web  
+
 
 
 ## What do we want to be able to do?
@@ -946,8 +950,6 @@ Previous interactivity happened in the browser
 
 ## Where are we at?  
 
-- Review of Key Concepts  
-
 - R Markdown Basics  
     + Code Chunks
     + Images/Equations/Misc.
@@ -958,16 +960,6 @@ Previous interactivity happened in the browser
     + Interactive Components
 
 - R Shiny Applications/Presentations
-
-## Activity 
-
-- [**Outputs and Interactivity Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/OutputsActivity.html) available on web  
-
-- Work in small groups  
-
-- Ask questions!  TAs and I will float about the room  
-
-- Feel free to ask questions about anything you didn't understand as well!  
 
 
 ## Parameters (Advanced)  
@@ -1004,11 +996,14 @@ scoreData <- read_csv("https://github.com/jbpost2/
 		IntermediateR/blob/master/datasets/scoresFull.csv?raw=true")
 ```
 ```{r, eval = TRUE, echo = TRUE, message = FALSE}
+teamIDs <- unique(scoreData$awayTeam)
 reports <- tibble(
-  teamIDs = unique(scoreData$awayTeam),
-  filename = stringr::str_c("TeamID-", teamIDs, ".html"),
-  params = purrr::map(teamIDs, ~ list(team = .))
+  teamIDs = teamIDs,
+  filename = paste0("TeamID-", teamIDs, ".html")
+,
+  params = lapply(teamIDs, FUN = function(x){list(team = x)})
 )
+
 ```
 
 ## Parameters (Advanced) 
@@ -1025,6 +1020,7 @@ Now knit via the following code:
 reports %>% 
   select(output_file = filename, params) %>% 
   purrr::pwalk(rmarkdown::render, input = "NFL.Rmd")
+#pwalk applies the function render with the arguments given
 ```
 
 
