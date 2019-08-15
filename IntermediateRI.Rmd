@@ -1,7 +1,7 @@
 ---
-title: "Intermediate Programming in R Part I"
+title: "Advanced R Part I"
 author: "Justin Post"
-date: "August 16-17, 2018"
+date: "August 15-16, 2019"
 output:       
       ioslides_presentation:
          css: css/style.css
@@ -11,7 +11,7 @@ logo: img/logo.png
 ---
 
 
-```{r setup,echo=FALSE,message=FALSE}
+```{r setup,echo=FALSE,message=FALSE, warning = FALSE}
 library(dplyr)
 options(dplyr.print_min = 5)
 library(knitr)
@@ -45,8 +45,6 @@ opts_chunk$set(message = FALSE, cache = TRUE)
 
 ## Where do we start?  
 
-- RStudio and Background Skills
-
 - R Markdown Basics  
     + Code Chunks
     + Images/Equations/Misc.
@@ -61,32 +59,22 @@ opts_chunk$set(message = FALSE, cache = TRUE)
 
 ## RStudio
 
-- Great integrated development environment (IDE)  
+Nice functionality for  
 
-- Four main 'areas' we'll use  
-    + Scripting and Viewing Area  
-    + Workspace/History  
-    + Files/Plots/Help  
-    + Console
-    
+- Markdown  
 
-## RStudio
+- Shiny  
 
-- Can rearrange panes
+- Databases  
 
-```{r panes.png, out.width = "800px",echo=FALSE}
-knitr::include_graphics("img/panes.png")
-```
-
-- Global options --> Appearance allows font/background changes  
-- Global options --> Code allows for soft-wrap of script files  
+- Git/Github  
 
 
 ## RStudio - Project
 
 - Often have many files associated with each analysis  
 
-> - Keeping different undertakings separate can be difficult!
+ - Keeping different undertakings separate can be difficult!
 
 > - Can use "Project" feature in R Studio  
 
@@ -111,274 +99,10 @@ knitr::include_graphics("img/project.png")
 
 - Let's create one for today!  
 
-- Place the 'TextActivityPlainText.Rmd' file in the project folder  
-
-
-## Background R Material    
-**Packages**
-- Many ways to accomplish the same thing in R
-
-> - How to choose?  
-     <ul>
-       <li>Want 'fast' code</li>
-       <li>Want 'easy' syntax</li>  
-       <li>Good default settings on functions</li>  
-     </ul>
-     
-> - Base R has reasonable defaults and syntax but functions are slower and aren't consistent  
-
-> - "[TidyVerse](http://tidyverse.org/)" - collection of R packages that share common philosophies and are designed to work together!  
-    <ul>
-      <li>Very efficient code</li>
-      <li>Common syntax</li>  
-    </ul>
-
-
-## Background R Material   
-
-- If not installed (downloaded) on computer
-
-```{r,eval=FALSE}
-install.packages("tidyverse")
-```
-
-
-## Background R Material  
-- Once installed, `library()` or `require()` to load
-```{r tidyverse}
-library(tidyverse)
-```    
-
-
-## Tidyverse Syntax
-
- - All packages have similar syntax!  All work on `tibbles` (epecial data frames)  
-
-> - Convert any data frame (or matrix) to a tibble using `tbl_df()`
-
-> - Nice printing properties (can sometimes cause issues though)
-
-> - Most packages have syntax: `function(data.frame, options)`
-
-
-
-## Tidyverse Syntax
-
- - All packages have similar syntax!  All work on `tibbles` (epecial data frames)  
-
- - Convert any data frame (or matrix) to a tibble using `tbl_df()`
-
- - Nice printing properties (can sometimes cause issues though)
-
- - Syntax: `function(data.frame, options)`
-
-- Examples:
-```{r ggplot,eval=FALSE}
-select(iris, Sepal.Width)
-ggplot(iris, aes(x = Sepal.Width, y = Sepal.Length)) + geom_point()
-```
-
-
-## Background R Material      
-**Data Frames**
-
-- Best R object for data sets
-- Collection (list) of vectors of the same **length**
-
-```{r iris-tibble}
-iris<-tbl_df(iris); iris
-```
-
-## Background R Material  
-**Data Frames**  
-
-- Accessing elements: multiple ways
-
-```{r index-df1}
-iris[1:4, 2:4]
-```
-
-
-## Background R Material  
-**Data Frames**  
-
-- Accessing elements: multiple ways
-
-```{r index-df2}
-iris[1, ]
-```
-
-
-## Background R Material  
-**Data Frames**  
-
-- Accessing elements: multiple ways
-
-```{r index-df4}
-iris$Sepal.Length
-```
-
-
-## Background R Material  
-**Data Frames**  
-
-- Accessing elements: multiple ways
-
-```{r index-df3}
-#same result
-#iris[ , c("Sepal.Length", "Species")]
-select(iris, Sepal.Length, Species)
-```
-
-
-## Background R Material  
-
-- Read in most any type of data with packages
-    + readr (.csv, delimited data)  
-    + readxl (.xls, .xlsx)  
-    + haven (.sav, .dta, .sas7bdat)  
-    
-```{r votingDataP,eval=FALSE}
-#read in data (readr, readxl, haven packages)
-votingData <- read_csv("https://raw.githubusercontent.com/
-                       jbpost2/IntermediateR/master/datasets/counties.csv")
-```
-
-## Background R Material  
-
-```{r votingDataE,eval=TRUE, echo=FALSE, message=FALSE}
-#read in data (readr, readxl, haven packages)
-votingData <- read_csv("https://raw.githubusercontent.com/jbpost2/IntermediateR/master/datasets/counties.csv")
-```
-```{r}
-votingData
-```
-
-
-## Background R Material  
-**Piping or Chaining**
-
-- Applying multiple functions: nesting hard to parse!
-- Piping or Chaining with %>% operator helps
-
-
-
-## Background R Material  
-**Piping or Chaining**
-
-- Applying multiple functions: nesting hard to parse!
-- Piping or Chaining with %>% operator helps
-- If `dplyr` or `magrittr` package loaded, can use anywhere
-```{r pipingP,eval=FALSE}
-#Consider
-votingData %>% 
-  filter((state == "NC") & (college > 20)) %>% 
-  select(county, msa, pop.density:turnout) %>% 
-  arrange(college, desc(turnout))
-#vs
-arrange(select(filter(votingData, ((state == "NC") & (college > 20))), 
-               county, msa, pop.density:turnout), college, desc(turnout))
-```
-
-## Background R Material  
-**Piping or Chaining**
-
-```{r pipingE}
-votingData %>% 
-  filter((state == "NC") & (college > 20)) %>% 
-  select(county, msa, pop.density:turnout) %>% 
-  arrange(college, desc(turnout))
-```
-
-## Background R Material  
-**Plotting**  
-
-- R great for plotting  
-
-> - We'll use `ggplot2` in `tidyverse`! [cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)  
-
-> - Needs:  Data Frame
-> - Aesthetic (aes) - maps variables to properties of geom
-      <ul>
-         <li> Ex: size, color, and x, y location(s) </li>
-        </ul>
-> - Geom layer(s) (visualizaton type(s))  
-> - Coordinate system (mostly use Cartesian plane)  
-> - Optional: Stat layer, titles, etc.
-
-
-## Background R Material  
-`ggplot2` needs and syntax
-
-Needs:
-
-- Data Frame  
-- Aesthetic (aes) - maps variables to properties of geom  
-- Geom layer(s) (visualizaton type(s))    
-- Optional: Stat layer, titles, etc.  
- 
-- Syntax:
-
-```{r ggplot-syntax,eval=FALSE}
-g <- ggplot(dataframe,aes(x = , y = , ...))
-g + geom_type(...) +
-  stat_type(...) + 
-  labs(...)
-```
-
-## Background R Material  
-
-- Settings that depend on a variable go in `aes`  
-
-```{r ggplot-facet-exP,eval=FALSE,echo=TRUE,message=FALSE}
-g <- ggplot(votingData, aes(x = income, y = turnout)) 
-g + geom_point(size = 0.5, aes(color = college)) +
-  geom_smooth() +
-  geom_rug() +
-  facet_grid(region ~ .)
-```
-
-## Background R Material  
-
-```{r ggplot-face-exE,eval=TRUE, echo=FALSE, message=FALSE}
-g <- ggplot(votingData, aes(x = income, y = turnout))
-g +  geom_point(size = 0.5, aes(color = college)) +
-  geom_smooth() +
-  geom_rug() +
-  facet_grid(region ~ .)
-```
-
-
-## What do we want to be able to do?
-
-- Communicate findings effectively 
-
-- Document findings 
-
-- Make reproducible process  
-
-- Share process
-
-
-## Where do we start?  
-
-- Review of Key Concepts  
-
-- R Markdown Basics  
-    + Code Chunks
-    + Images/Equations/Misc.
-
-- R Markdown Options
-    + Documents: PDF, HTML 
-    + Presentations: Slides
-    + Interactive Components
-
-- R Shiny Applications/Presentations
-
+- Place the [TextActivityPlainText.Rmd]("files/TextActivityPlainText.Rmd") file in the project folder  
 
 
 ## R Markdown Basics  
-
 
 ```{r process.png, out.width = "700px",echo=FALSE}
 knitr::include_graphics("img/process.png")
@@ -400,19 +124,40 @@ knitr::include_graphics("img/process.png")
 > - Need to communicate results effectively
 
 
+
+## (Traditional) Basic Use of R  
+
+- Usually want to keep code for later use  
+
+ - Write code in a 'script'  
+
+ - Save code script  
+
+ - Send lines of code to console via: 
+    <ul>
+      <li> "Run" button (runs current line)  </li>
+      <li> CTRL+Enter (PC) or Command+Enter (MAC)  </li>
+      <li> Highlight section and do above</li>
+    </ul>
+
+
+## Using a Notebook Instead  
+
+- Communication and reproducibility vital!  
+
+> - May have heard of [JUPYTER](http://jupyter.org/) notebooks  
+
+> - R Markdown - built in notebook for R studio
+
+> - [Intro video](https://www4.stat.ncsu.edu/~post/IntermediateR/video/Markdown.mp4)
+
+
 ## R Markdown Basics  
 **What is Markdown?**  
 
 - Formatting syntax for authoring HTML, PDF, slide shows, books, and more.  
 
-> - Digital "Notebook":  Program that weaves word processing and code.  [Example](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/IntermediateRI.Rmd)  
-
-> - Can do interactive documents! 
-
-> - [Intro video](https://www4.stat.ncsu.edu/~post/IntermediateR/video/Markdown.mp4)
-
-## R Markdown Basics  
-**How to use Markdown?**  
+ - Digital "Notebook":  Program that weaves word processing and code.  [Example](https://raw.githubusercontent.com/jbpost2/IntermediateR/master/IntermediateRI.Rmd)  
 
 Designed to be used in three ways (R for Data Science)  
 
@@ -423,6 +168,7 @@ Designed to be used in three ways (R for Data Science)
 > + As environment to do data science (documents what you did and what you were thinking)
 
 > + [Examples](http://rmarkdown.rstudio.com/gallery.html) of markdown documents
+
 
 
 ## R Markdown Basics
@@ -575,8 +321,6 @@ chunks within the document.
 
 > - Check options for code chunks  
 
-> - Automate some things  
-
 > - Change type of output  
 
 > - Work with interactivity (shiny)  
@@ -653,6 +397,26 @@ chunks within the document.
 </div>
 
 
+
+## R Markdown Syntax
+
+- Can customize things if you know HTML (a little)  
+
+`<div style = "float: left; width: 50%">`  
+
+```
+* unordered list  
+```  
+
+`</div>`
+
+`<div style = "float: right; width: 50%">`  
+
+* unordered list  
+
+`</div>`
+
+
 ## R Markdown Syntax  
 
 - Can include nice tables  
@@ -677,8 +441,6 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3)
 
 - [**Formatting Text Activity** instructions](http://www4.stat.ncsu.edu/~post/IntermediateR/TextActivity.html) available on web  
 
-- Work in small groups  
-
 - Ask questions!  TAs and I will float about the room  
 
 - Feel free to ask questions about anything you didn't understand as well!   
@@ -697,8 +459,6 @@ Cell (2, 1)   | Cell (2, 2)   | Cell (2, 3)
 
 
 ## Where are we at?  
-
-- Review of Key Concepts  
 
 - R Markdown Basics  
     + **Code Chunks**  
@@ -737,13 +497,13 @@ code
 
 Data science notebook - virtual notebook environment used for literate programming  
 
-> - Pairs the functionality of word processing software with a programming language
+ - Pairs the functionality of word processing software with a programming language
 
-> - Rendered markdown document captures R code and process  
+ - R Markdown brings together the console and the script editor too!  
+ - Rendered markdown document captures R code and process  
 
-> - R Markdown brings together the console and the script editor too!  
+[NHL Example html]("files/GetData.html"), [NHL Example Rmd]("files/GetData.Rmd")
 
-> - Blurs line between interactive exploration and long-term code capture. 
 
 
 ## Notebook Functionality  

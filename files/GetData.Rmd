@@ -1,0 +1,334 @@
+---
+title: "Grabbing and Cleaning NHL Data"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(RCurl)
+library(rjson)
+library(knitr)
+opts_chunk$set(message = FALSE, cache = FALSE)
+```
+
+First get the game IDs from the NHL API.  Start with a single day to check out structure.
+
+```{r}
+oneDay <- fromJSON(getURL("https://statsapi.web.nhl.com/api/v1/schedule?startDate=2018-10-14&endDate=2018-10-14"))
+str(oneDay)
+```
+
+Just want to grab the game IDs that they use so we can pull appropriate play by play and shift data.  Might as well grab some other things too I suppose!
+
+Data of interest stored in first list element of `dates`:
+```{r}
+oneDay$dates[[1]]
+
+```
+
+Write a function to get what we want.
+```{r}
+extractNHLData <- function(gameStuff){
+  info <- list()
+  
+  info$ID <- gameStuff$`gamePk`
+  info$gameType <- gameStuff$`gameType`
+  info$gameDayTime <- gameStuff$`gameDate`
+  info$awayTeam <- gameStuff$`teams`$`away`$`team`$`name`
+  info$awayTeamID <- gameStuff$`teams`$`away`$`team`$`id`
+  info$awayScore <- gameStuff$`teams`$`away`$`score`
+  info$awayWins <- gameStuff$`teams`$`away`$`leagueRecord`$`wins`
+  info$awayLosses <- gameStuff$`teams`$`away`$`leagueRecord`$`losses`
+  info$awayOT <- gameStuff$`teams`$`away`$`leagueRecord`$`ot`
+  info$homeTeam <- gameStuff$`teams`$`home`$`team`$`name`
+  info$homeTeamID <- gameStuff$`teams`$`home`$`team`$`id`
+  info$homeScore <- gameStuff$`teams`$`home`$`score`
+  info$homeWins <- gameStuff$`teams`$`home`$`leagueRecord`$`wins`
+  info$homeLosses <- gameStuff$`teams`$`home`$`leagueRecord`$`losses`
+  info$homeOT <- gameStuff$`teams`$`home`$`leagueRecord`$`ot`
+  info$venue <- gameStuff$`venue`$`name`
+  return(gameInfo = info)
+  }
+
+parsed <- t(sapply(FUN = extractNHLData, oneDay$dates[[1]]$`games`) )
+parsed
+
+```
+
+Looking good.  This works for a particular day (`dates[[1]]`).  Need to make it work for everyday grabbed.  
+
+```{r}
+twoDays <- fromJSON(getURL("https://statsapi.web.nhl.com/api/v1/schedule?startDate=2018-10-14&endDate=2018-10-15"))
+length(twoDays$dates)
+
+parseSingleDay <- function(day, object){
+  t(sapply(FUN = extractNHLData, object$dates[[day]]$`games`) )
+}
+
+parseSingleDay(2, twoDays)
+
+temp <- lapply(X = 1:2, FUN = parseSingleDay, object = twoDays)
+temp
+
+#convert to data frames in each element and combine
+lapply(temp, as.data.frame) %>% bind_rows(.id = "column_label")
+```
+
+Turn it all into one easy function, grab more dates, and test.
+
+```{r}
+combineDays <- function(object){
+  lapply(X = 1:length(object$dates), FUN = parseSingleDay, object) %>% lapply(as.data.frame) %>% bind_rows(.id = "column_label")
+}
+
+combineDays(twoDays)
+
+#full function
+parseNHLData <- function(startDate = "2018-10-14", endDate = "2018-10-15"){
+  url <- paste0("https://statsapi.web.nhl.com/api/v1/schedule?startDate=", startDate, "&endDate=", endDate)
+  raw <- fromJSON(getURL(url))
+  combineDays(raw)
+}
+
+NHLData <- parseNHLData(startDate = "2018-10-14", endDate = "2018-11-01")
+
+NHLData
+```
+
+```{r, eval = FALSE}
+#first day of season has some weird game between Oilers and KLH...
+#just do as a special case
+temp <- fromJSON(getURL("https://statsapi.web.nhl.com/api/v1/schedule?startDate=2018-10-03&endDate=2018-10-03"))
+temp$dates[[1]]$`games`[[1]] <- NULL
+NHLDay1 <- t(sapply(FUN = extractNHLData, temp$dates[[1]]$`games`))
+NHLData <- parseNHLData(startDate = "2018-10-04", endDate = "2019-04-06")
+NHLData <- NHLData %>% select(-V1:-V3, - column_label) 
+NHLData <- rbind(NHLDay1, NHLData)
+#can't write to file due to weird list columns...
+dput(NHLData, file = "NHLGameData.txt")
+```
+
+
+Ok, now that the meta data is grabbed - ready to get the play-by-play and the shift data!
+
+Check shift data
+```{r, eval = FALSE}
+temp2 <- fromJSON(getURL(paste0("http://www.nhl.com/stats/rest/shiftcharts?cayenneExp=gameId=",gameIDs[1])))
+length(temp2$data)
+t2 <- lapply(temp2$data, unlist)
+t3 <- t2 %>% lapply(as.data.frame) %>% lapply(t)
+t3 %>% bind_rows()
+rbind(t3[[1]], t3[[833]])
+#some are of differing lengths - appears to be when goals or something happens. Those are at the end though
+```
+
+Looks like detailCode of 0 means a shift I think.  Also may need to get player info later.
+```{r, eval = FALSE}
+temp2 <- fromJSON(getURL(paste0("http://www.nhl.com/stats/rest/shiftcharts?cayenneExp=gameId=",gameIDs[1]))) 
+temp3 <- lapply(temp2$data, unlist)  
+temp4 <- lapply(temp3, function(x){if(x["detailCode"] != "0"){return(NULL)} else{return(x)}})
+temp5 <- lapply(temp4, as.data.frame) %>% lapply(t) %>% unlist() %>% matrix(ncol = 16, byrow = TRUE)
+
+```
+
+Ok that seems to get everything needed in the right form.  Write functions to get it for a given game.
+
+```{r}
+extractShiftData <- function(gameStuff){
+  unlisted <- lapply(gameStuff, unlist)
+  columns <- names(unlisted[[1]])
+  formatted <- unlisted %>% lapply(function(x) { 
+        if(x["detailCode"] != "0"){
+          return(NULL)
+        } else {
+          return(x)
+        }
+      }) %>% 
+    lapply(as.data.frame) %>% 
+    lapply(t)
+  #hopefully everything has length 16 (other than Null)
+  #if not make it 16 to be safe
+  checked <- formatted %>% lapply(function(x){
+    if(length(x) != 16){
+      x <- c(x, rep(NA, 16-length(x)))
+    } else {
+      x
+    }
+  })  %>% 
+    unlist() %>% 
+    matrix(ncol = 16, byrow = TRUE)
+    colnames(checked) <- columns
+    return(checked)
+}
+
+shiftGame <- fromJSON(getURL(paste0("http://www.nhl.com/stats/rest/shiftcharts?cayenneExp=gameId=",gameIDs[1])))
+
+extractShiftData(shiftGame$data)
+```
+
+Now combining games.
+
+```{r}
+shiftGame2 <- fromJSON(getURL(paste0("http://www.nhl.com/stats/rest/shiftcharts?cayenneExp=gameId=",gameIDs[2])))
+
+shift1 <- extractShiftData(shiftGame$data)
+shift2 <- extractShiftData(shiftGame2$data)
+
+#same structures, just bind_rows for all games found
+gameIDs <- NHLData$ID
+
+combineDays <- function(gameIDs){ 
+  rawData <- lapply(gameIDs, 
+         function(x){
+           fromJSON(getURL(paste0("http://www.nhl.com/stats/rest/shiftcharts?cayenneExp=gameId=",x)))
+         }
+  )
+  shifts <- lapply(rawData, function(x) { 
+    extractShiftData(x$data)
+    })
+  shifts %>% lapply(as.data.frame, stringsAsFactors = FALSE) %>% bind_rows()
+  }
+
+shiftData <- combineDays(gameIDs[1:20])
+write_csv(x = shiftData, path = "NHLShiftData.csv")
+```
+
+
+
+Let's parse some play by play.
+```{r, eval = TRUE}
+gameIDs <- unlist(NHLData$ID)
+gameIDs[1]
+temp <- fromJSON(getURL(paste0("https://statsapi.web.nhl.com/api/v1/game/",gameIDs[1],"/feed/live?site=en_nhl")))
+#first play
+temp$liveData$plays$allPlays[[4]]
+#probably parse each event type differently
+temp$liveData$plays$allPlays[[4]]$result$event
+length(temp$liveData$plays$allPlays)
+
+#temp$liveData$plays$allPlays[[363]]
+#temp$liveData$plays$allPlays[[364]]
+#temp$liveData$plays$allPlays[[365]]
+#last one looks like this
+# temp$liveData$plays$allPlays[[366]]
+
+temp <- fromJSON(getURL(paste0("https://statsapi.web.nhl.com/api/v1/game/",gameIDs[1],"/feed/live?site=en_nhl")))
+
+a <- lapply(temp$liveData$plays$allPlays, function(x){print(x$`result`$`event`)}) %>% unlist() %>% unique()
+
+temp <- fromJSON(getURL(paste0("https://statsapi.web.nhl.com/api/v1/game/",gameIDs[2],"/feed/live?site=en_nhl")))
+b <- lapply(temp$liveData$plays$allPlays, function(x){print(x$`result`$`event`)}) %>% unlist() %>% unique()
+
+temp <- fromJSON(getURL(paste0("https://statsapi.web.nhl.com/api/v1/game/",gameIDs[3],"/feed/live?site=en_nhl")))
+c <- lapply(temp$liveData$plays$allPlays, function(x){print(x$`result`$`event`)}) %>% unlist() %>% unique()
+
+unique(c(a,b,c))
+
+eventTypes <- c("Game Scheduled",
+                "Period Ready",
+                "Period Start",
+                "Faceoff",
+                "Shot",
+                "Stoppage",
+                "Blocked Shot",
+                "Giveaway",
+                "Hit",
+                "Missed Shot",
+                "Takeaway",
+                "Goal",
+                "Penalty",
+                "Period End",
+                "Period Official",
+                "Game End")
+```
+
+Unique event types I see after checking a few games:
+[1] "Game Scheduled"  "Period Ready"   
+ [3] "Period Start"    "Faceoff"        
+ [5] "Shot"            "Stoppage"       
+ [7] "Blocked Shot"    "Giveaway"       
+ [9] "Hit"             "Missed Shot"    
+[11] "Takeaway"        "Goal"           
+[13] "Penalty"         "Period End"     
+[15] "Period Official" "Game End" 
+
+Seems like I can just unlist each list element similar to temp$liveData$plays$allPlays[[4]].  Ones without players are missing fields but that should be fine...
+
+```{r}
+a <- apply(temp$liveData$plays$allPlays, unlist)
+#need to modify names for events with more than 1 player
+#otherwise same names and converting to data frame loses them
+replaceNames <- function(x) { 
+   modify <- c("players.player.id",
+                "players.player.fullName",
+                "players.player.link", 
+                "players.playerType", 
+                "players.seasonTotal")
+       while("players.playerType" %in% names(x)){
+      replace <- which(names(x) %in% modify)
+      numReplace <- which(modify %in% names(x))
+      if((x["players.playerType"] == "Assist") & ("players.playerType.Assist.1" %in% names(x))){
+        temp <- paste(modify[numReplace], x["players.playerType"], "2", sep = ".")
+      }  else if(x["players.playerType"] == "Assist") {
+        temp <- paste(modify[numReplace], x["players.playerType"], "1", sep = ".")
+      } else {
+        temp <- paste(modify[numReplace], x["players.playerType"], sep = ".")
+      }
+      names(x)[replace[numReplace]] <- temp
+       }
+   return(x)
+  }
+b <- a %>% lapply(replaceNames) %>%   
+  lapply(as.data.frame, stringsAsFactors = FALSE) %>% lapply(t) %>% lapply(as.data.frame, stringsAsFactors = FALSE) %>% bind_rows()
+
+```
+
+Ok try to put it together
+
+```{r}
+replaceNames <- function(x) { 
+   modify <- c("players.player.id",
+                "players.player.fullName",
+                "players.player.link", 
+                "players.playerType", 
+                "players.seasonTotal")
+       while("players.playerType" %in% names(x)){
+      replace <- which(names(x) %in% modify)
+      numReplace <- which(modify %in% names(x))
+      if((x["players.playerType"] == "Assist") & ("players.playerType.Assist.1" %in% names(x))){
+        temp <- paste(modify[numReplace], x["players.playerType"], "2", sep = ".")
+      }  else if(x["players.playerType"] == "Assist") {
+        temp <- paste(modify[numReplace], x["players.playerType"], "1", sep = ".")
+      } else {
+        temp <- paste(modify[numReplace], x["players.playerType"], sep = ".")
+      }
+      names(x)[replace[numReplace]] <- temp
+       }
+   return(x)
+}
+
+#a <- lapply(temp$liveData$plays$allPlays, unlist)
+
+flattenNHL <- function(x){lapply(x$liveData$plays$allPlays, unlist)}
+flattenAddGameID <- function(x){
+  flat <- flattenNHL(x)
+  lapply(flat, function(y, x){y["gamePk"] <- x$gamePk
+  return(y)}, x = x)
+  }
+
+parseNHLGame <- function(x){
+  x %>% lapply(replaceNames) %>%   
+  lapply(as.data.frame, stringsAsFactors = FALSE) %>% lapply(t) %>% lapply(as.data.frame, stringsAsFactors = FALSE) %>% bind_rows()
+}
+
+
+parseNHLPlayByPlay <- function(gameIDs){
+  lapply(gameIDs, function(x){fromJSON(getURL(paste0("https://statsapi.web.nhl.com/api/v1/game/", x, "/feed/live?site=en_nhl")))}) %>% lapply(flattenAddGameID) %>% lapply(parseNHLGame) %>% bind_rows() 
+  }
+
+playData <- parseNHLPlayByPlay(gameIDs[1:4])
+
+#data <- lapply(gameIDs2, function(x){fromJSON(getURL(paste0("https://statsapi.web.nhl.com/api/v1/game/", x, "/feed/live?site=en_nhl")))}) %>% lapply(flattenAddGameID) %>% lapply(parseNHLPlay) %>% bind_rows() 
+
+```
+
