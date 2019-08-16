@@ -1,7 +1,7 @@
 ---
-title: "Intermediate Programming in R Part II"
+title: "Advanced R: Shiny"
 author: "Justin Post"
-date: "August 16-17, 2018"
+date: "August 15-16, 2019"
 output:       
       ioslides_presentation:
          css: css/style.css
@@ -12,12 +12,12 @@ runtime: shiny
 ---
 
 
-```{r setup,echo=FALSE,message=FALSE}
+```{r setup,echo=FALSE,message=FALSE, warning = FALSE}
 library(dplyr)
 options(dplyr.print_min = 5)
 library(knitr)
 library(readr)
-opts_chunk$set(echo = FALSE)
+opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
 ## What do we want to be able to do?

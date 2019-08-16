@@ -125,6 +125,7 @@ knitr::include_graphics("img/process.png")
 
 
 
+
 ## (Traditional) Basic Use of R  
 
 - Usually want to keep code for later use  
@@ -1025,6 +1026,7 @@ reports %>%
   select(output_file = filename, params) %>% 
   purrr::pwalk(rmarkdown::render, input = "NFL.Rmd")
 #pwalk applies the function render with the arguments given
+
 ```
 
 
