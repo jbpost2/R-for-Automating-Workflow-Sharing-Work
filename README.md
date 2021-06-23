@@ -1,31 +1,33 @@
-# Improving R Programs
+# R for Automating Workflow & Sharing Work
 
 ## Summary
 
-This course introduces common programming techniques that can improve the efficiency of your R programs.  These techniques include the use of loops and vectorized functions to avoid repeated sections of code.  To really take R programs to the next level, we'll see how to write custom functions that will help to streamline code.   
+The course provides participants an introduction to utilizing R for writing reproducible reports and presentations that easily embed R output, using online repositories and version control software for collaboration, creation of basic websites using R, and the development of interactive dashboards and web applets. 
 
 ## Why Take This Course?
 
-R is an extremely versatile programming language that has the capability to fit a fantastic array of statistical and machine learning models, is extremely easy to collaborate with, and has the capacity to easily and widely share your analyses.
+Being able to easily collaborate and share work is of paramount importance.  This course discusses many topics that can help improve workflow, collaboration, and dissemination of analyses. 
 
-Often times, the same types of steps are taken repeatedly to each column, object, or dataset.  Rather than copying and pasting the same code over and over and simply making small tweaks, which is error prone, participants will learn how to automate these changes. 
+We'll look at how the knitr package can be used to create a multitude of different output files (including PDF, HTML, slideshows, and more) that include both formatted text and R code using the simple R Markdown language.  Further, we'll see how to automate common analyses to create multiple versions of a report for different subsets of data. 
 
-Specifically, we'll use loops to iteratively reevaluate code while changing elements and then see the efficiency of using vectorized functions to do similar evaluations. 
+In order to better collaborate, we'll discuss basic use of git and github through the RStudio environment.  This software not only allows for easy collaboration but also provides strong version control, ensuring a record of all changes made over time.  We'll also see that github and R Markdown can be used to create sleek looking websites to easily share your analyses. 
 
-We'll also discuss the idea of breaking up common tasks into custom functions to help write clean code that is easy to debug.  Being able to write your own R functions really opens up the possibilities that R has and can help with general understanding of how R works. 
+The creation of interactive and customizable dashboards and web applets through RShiny will be covered as well.  These provide the user of the app the ability to change sliders, enter values, and more with R running calculations on the backend.
 
-## Course Outline
+## What Will Participants Learn?
 
-The course provides a brief overview of R data structures followed by the following topics:
+Students will learn about the following topics:
 
-- Loops in R
+- The R Markdown language
 
-- Vectorized functions (apply family of functions)
+- How to automate reports with R Markdown
 
-- How R functions work
+- Use of git and github for collaboration and version control
 
-- Function writing 
+- Basic creation of websites through Markdown and github
+
+- R Shiny web apps
 
 ## Prerequisites and Requirements
 
-This course will make heavy use of hands-on programming.  We'll generally introduce a topic and then have exercises to practice and explore.  As such, participants must bring their own laptop computer that has access to the internet and the ability to install programs and download files.  This course assumes basic knowledge of how to program in R.  Participants taking the course "Basics of R for Data Science and Statistics" should be prepared for this course.
+This course will make heavy use of hands-on programming.  We'll generally introduce a topic and then have exercises to practice and explore.  As such, participants must bring their own laptop computer that has access to the internet and the ability to install programs and download files.  This course assumes basic knowledge of how to program in R.  Participants taking the course "Basics of R for Data Science and Statistics" or "Improving R Programs" should be prepared for this course.
