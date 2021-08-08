@@ -1,5 +1,7 @@
 # R for Automating Workflow & Sharing Work
 
+<a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/CourseFiles.html"><button type="button">Course Files Page</button></a>
+
 ## Summary
 
 The course provides participants an introduction to utilizing R for writing reproducible reports and presentations that easily embed R output, using online repositories and version control software for collaboration, creation of basic websites using R, and the development of interactive dashboards and web applets. 
