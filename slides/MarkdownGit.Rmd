@@ -34,13 +34,7 @@ opts_chunk$set(message = FALSE, cache = TRUE, warning = FALSE)
 
 - Writing a Book with bookdown  
 
-- Writing emails with R
-
-- Automating R scripts to run  
-
 - Creating interactive apps with R shiny  
-
-## Look Ahead  
 
 
 ## RStudio Project
@@ -438,7 +432,7 @@ Let's look at an [example repo](https://github.com/jbpost2/TeachingWithR) and th
 
 - Sign into github.com and then go to [this repo](https://github.com/barryclark/jekyll-now)
 
-- Click `fork` in the top right corner.  This will give you a copy of this repo under your account!  
+- Click `fork` in the top right corner.  This will give you a copy of this repo under your account! Under settings, rename the repo to yourname.github.io
 
 - Visit https://yourgithubusername.github.io to see the default blog page (i.e. you already have a blog :)  
 
@@ -454,7 +448,6 @@ Let's look at an [example repo](https://github.com/jbpost2/TeachingWithR) and th
     
 - It may take 2 minutes but visit https://yourgithubusername.github.io again to see the changes.  
 
-- While you wait, update the about page of your blog by going to the main page of the repo and clicking on 'about.md'.  Make changes like before and commit!  
 
 
 ## Cloning the repo  
@@ -468,65 +461,110 @@ Let's look at an [example repo](https://github.com/jbpost2/TeachingWithR) and th
     + Can download a zip and unzip it to an appropriate folder  
     + Can clone via the URL and terminal or RStudio  
     
-- Open RStudio, go to new project, from Version Control, chooes Git, and paste in the repo link
+- Open RStudio, go to new project, from Version Control, choose Git, and paste in the repo link.  Select a directory to save this in and hit Create project!
+
+- Now have the files locally!  
 
 
+## Update check
 
-Let's get just a little practice using the CLI.  Open the CLI (type Git Bash into the search bar for Windows, go to /Applications/Utilities/ and launch the terminal window for Mac).  
+We need to make sure RStudio and github can communicate.  Do the following:
 
-    Type ls to see what folders are in the current directory
-    Create a folder on your computer that you know the path to. Set your current directory to that path using cd "path/to/directory" Now run ls and you probably shouldn't see any subfolders
-    Type cd .. to move up one directory. Use the cd command to move back into the directory.
-    Create a new R file in the folder by typing touch exampleFile.R
-    Now run ls and you should see the file in the directory
-    You can actually edit the file through your shell. There are many great programs (such as emacs) you could use but by default I think you should have vim and nano. Let's use nano to open the file. Type nano exampleFile.R and you should enter into an editing mode.
-    Add the following command to the file (putting your path in), write.csv(file = "path/to/your/newdirectory/data.csv", rnorm(100)) On your keyboard press "Ctrl/Cmd O" to write out the changes, hit enter to submit the changes to the file. Then "Ctrl/Cmd X" to exit the editor.
-    Now we can run the file from the CLI!  We just need to call R (or in this case Rscript and tell it where the file is).  Since we are in the directory of the file we can use a relative path.  This code runs the file for me (your code may need to be slightly different).  
-    "C:/Program Files/R/R-3.5.1/bin/Rscript" exampleFile.R
-    You should now have a .csv file in the directory. You can remove files in the directory using rm. Be careful, you can erase a lot of things on accident! rm exampleFile.R
+- Go to the `Git` tab in your `Environment` area  
 
-Talking with Git/GitHub
+- You should see some files there.  These are the ones that have changed from the remote repo (the one on github)  
 
-At this point we are ready to interact with Git through our computer.  Read chapter 7 and 8 of happygitwithr (opens in new window) - you may wish to install SourceTree (use Atlassian account) at this time, but we don't really need it.  Note: The editor I like to use is Notepad++.  You may want to install that and configure it to work (opens in new window)(optional).
+- Here you can add files that you'd like to commit up to the remote repo  
 
-Read through chapter 9 (opens in new window) and try to modify a repository.  We'll learn more about pushing, pulling, and committing in a bit so if you don't understand what is going on exactly, don't worry.  Just try to run the commands they do there and see if you get the appropriate changes to the files.  
-
-You'll want to do automatic authentication - check out chapters 10 and 11 (opens in new window) (11 is recommend) to do this.
-Using Git/GitHub through RStudio
-
-Lastly, we want to make it easy to connect to our repositories through RStudio.  If we get this done, we won't need to download files and reupload them.  This can all be done using commands in RStudio! Read chapter 1 (opens in new window)2 to get things working.  If you are having an issue, chapters 13 (opens in new window) and 14 (opens in new window)give some common issues and how to resolve them.
-
-Once you've worked through this, you are ready to go!
-Understanding Git/GitHub
-
-There are two resources below to help you understand Git and version control.  You can view whichever you prefer (or both) - the video is a bit long but uses RStudio so that is nice smile 
+- Click on all of the boxes (equivalent to `git add -A`) and click the `Commit` button  
 
 
-Read - Creating a Blog with Github
-Getting Comfortable with github
+## Update check  
 
-First, go to github.com (opens in new window) and signup for a github account (if you haven't already).  Once you have an account, read this introduction to github (opens in new window) here (we'll look at using git and the command line later in the course - for now we'll stick to the web editor).  Follow the steps to create your first repository, fork, and merge!
-Creating a Blog
+- This brings up a window that allows you to compare changes.  If you are happy you can put a commit message in the box in the top right and click the commit button (equivalent to `git commit -m "message"`)  
 
-You should now have some idea about what the point of github is and how to roughly use it from the web interface.  However, github can serve many purposes! 
+- Hit close on the window (you should see no errors, just a message about the commit)  
 
-The Build A Blog With Jekyll And GitHub Pages article here (opens in new window) outlines the use of github for creating a blog.  You should read this article up to the "Optional Steps" section.  Following along with this article is roughly half of your "First Blog post" assignment (the other half is you writing something!).  
+- Now click the push button in the top right (equivalent to `git push`)  
 
+- You should be prompted to log-in in some way.  Do so!  
 
-
-
+- Go to your repo on gitub.com and see the changes!  
 
 
+## Alternative to the Menu
 
-## Markdown Parameters  
+When working by myself on a repo, I'm not worried about merge conflicts with other people's changes.  As such, my workflow is as follows:  
 
-Parameters can be added to the YAML header  
+- Open the appropriate project in RStudio
 
- - Can help to automate reports!
+- Go to the Terminal (switched to Bash) and type `git pull` (or use the git tab)  
 
- - Suppose we are dealing with our football boxscore data set  
+- Work... at a good spot for saving, back to the terminal
+
+- Type `git add -A` to add all files that have been modified
+
+- Type `git commit -m "Message"` to stage a commit  
+
+- Type `git push` to push the local changes to the remote repo  
+
+
+## Try Out the Workflow  
+
+- Go to your blog repo and make a change via the web interface
+
+- Your local repo is no longer up to date!  (Type `git status` in the terminal to check). You'll need to pull down the changes.  
+
+- Now, let's update from RStudio!  
+
+- Update the about page of your blog by editing 'about.md'.  Make changes like before and commit!  
+
+- Push up the changes.  In 2-3 minutes you should see the About page updates :)  
+
+
+## Creating a Repo
+
+Let's create a repo with our already created 'github_website' project
+
+- Go to github.com and create a repo with that name (Use the + in the top right corner - don't initiate a git ignore file)
+
+- Open the github_website project we worked on earlier
+
+- Go to Tools --> Project Options --> Git (restart R as requested)
+
+- Now in the terminal do the following:
+
+    + `git remote add origin [paste the clone link here]`  (initiate the tracking of the project on github)
+    + `git pull origin main`  (download all remote files)
+    + `git push -u origin main` (track changes on this machine)  
+
+- Add, commit, and push your files up!
+
+
+## Creating a website
+
+Very easy!  Two steps:  
+
+- Enable github pages in your repo settings (on github.com)  
+- Create a README.Rmd file.  Change the output type to `github_document`  
+
+> - Write whatever R code you want, add, commit, and push up your changes  
+
+> - Now you'll have a site like https://jbpost2.github.io/github_website/  
+
+
+## Automating R Markdown  
+
+Let's take a break from git!  
+
+- Other markdown functionality: Using `parameters`  
+
+- Can be added to the YAML header and can be used to automate reports!
+
+ - Suppose we are dealing with a football box score data set  
+ 
 ```{r, message = FALSE}
-NFLData <- read_csv("../datasets/scoresFull.csv")
+NFLData <- read_csv("https://www4.stat.ncsu.edu/~online/datasets/scoresFull.csv")
 NFLData
 ```
  
@@ -546,21 +584,21 @@ params:
 
 - In .Rmd, access via `params$team`  
 
-> - Example: Let's open up the [NFL.html document](https://www4.stat.ncsu.edu/~post/ST558/files/NFL.html)
+> - Example: Let's open up the [NFL.Rmd document](https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/slides/NFL.Rmd)
 
 
 ## Parameters  
 
-May want to create a similar document for all 32 teams  
+May want to create a similar document/output for all 32 teams  
 
 - Utilize code method for knitting the document
 
 ```{r, eval = FALSE}
-rmarkdown::render("files/NFL.Rmd", output_file = "Cleveland Browns.html", 
+rmarkdown::render("NFL.Rmd", output_file = "Cleveland Browns.html", 
 									params = list(team = "Cleveland Browns"))
 ```
 
-- Would create same document for Cleveland Browns  
+- Would create same document using the Cleveland Browns data
 
 
 ## Parameters  
@@ -579,7 +617,7 @@ For one team the row would be (last column's value is really a list with one val
 data.frame(output_file = "Pittsburgh Steelers.html", params = list(team = "Pittsburgh Steelers"))
 ```
 
-##Parameters  
+## Parameters  
 
 ```{r, eval = TRUE, echo = TRUE, message = FALSE}
 #get unique teams
@@ -601,7 +639,7 @@ reports
 
 ## Parameters  
 
-Now knit using `apply()` or via `pwalk()` from the `purrr` package 
+Now knit using `apply()` or via `purrr::pwalk()` 
 
 ```{r, eval = FALSE, echo = TRUE}
 library(rmarkdown)
@@ -633,17 +671,137 @@ This can be done with multiple parameters.
     
     + Put all into one file (say with `source`)  
     
-    + Run that file with CLI to update with one command!  
+    + [Have that file automatically run](https://anderfernandez.com/en/blog/how-to-automate-r-scripts-on-windows-and-mac/)!  
     
 
+## Try it yourself!
+
+Try to do a similar process where you use the `iris` data frame and create three separate analysis based off of the `Species` column.  
+
+- Create a parameter called `species`
+
+- Run the following code in your markdown doc:
+
+```{r, eval = FALSE}
+myIris <- filter(iris, params$species)
+summary(myIris)
+plot(myIris)
+```
+
+- Use `apply()` or `pwalk()` to generate the three reports.  
 
 
-## Quick Examples  
-
-- Go to the <a href = "https://jbpost2.github.io/Basics-of-R-for-Data-Science-and-Statistics/CourseFiles.html">course files page</a> and try Exercise 5 - Markdown
-
-
-    
-    
-    
 ## Bookdown
+
+- You can easily write a book using RStudio too!  
+
+- Can be done via File --> New Directory --> Book Project Using bookdown
+
+- Instead we'll clone [this repo](https://github.com/jbpost2/myBook) and then create an R project from a git repository  
+
+- Let's see how to build the book!  
+
+- Chapters are just .Rmd files (named appropriately `01-intro.Rmd`) that start with a `#`  
+
+
+## Merging Branches  
+
+- Seems like a good idea to talk about merging branches!  
+
+- If you do a commit on your branch, you may notice something like this
+
+```{r, fig.align='center', out.width="59%", echo = FALSE}
+knitr::include_graphics("../img/forkcommit.png")
+```
+
+## Merging Branches
+
+Suppose you like your commit and you think I will too!  
+
+- You can do a `pull` request  
+
+```{r, fig.align='center', out.width="79%", echo = FALSE}
+knitr::include_graphics("../img/pullrequest.png")
+```
+
+
+
+## Merging Branches
+
+Suppose you like your commit and you think I will too!  
+
+- You can do a `pull` request  
+
+```{r, fig.align='center', out.width="75%", echo = FALSE}
+knitr::include_graphics("../img/pullinfo.png")
+```
+
+
+## Merging Branches
+
+If you are lucky, there won't be any merge conflicts.  
+
+- Allows the owner of the original repo to accept the pull request without needing to modify things
+
+- The owner will get a notification that a pull request has been made
+
+```{r, fig.align='center', out.width="45%", echo = FALSE}
+knitr::include_graphics("../img/pullrequestnoted.png")
+```
+
+
+## Merging Branches
+
+Owner can then investigate the request and choose whether or not to accept it or they can ask for more details
+
+```{r, fig.align='center', out.width="70%", echo = FALSE}
+knitr::include_graphics("../img/pullcheck2.png")
+```
+
+
+## Dealing with conflicts 
+
+- Sometimes changes requested conflict with changes already made  
+
+```{r, fig.align='center', out.width="70%", echo = FALSE}
+knitr::include_graphics("../img/mergeconflict.png")
+```
+
+
+## Dealing with conflicts 
+
+Owner sees a notification about conflicts that must be resolved  
+
+```{r, fig.align='center', out.width="70%", echo = FALSE}
+knitr::include_graphics("../img/resolve.png")
+```
+
+
+## Dealing with conflicts 
+
+They can view the issues and pick which to include or to include both with a modification  
+
+`<<<<<<<` is a conflict marker  
+
+```{r, fig.align='center', out.width="70%", echo = FALSE}
+knitr::include_graphics("../img/resolve2.png")
+```
+
+- Figure out what to do and delete the `<<< === >>>` lines  
+
+
+## Course Plan  
+
+- R Projects  
+
+- Markdown basics  
+
+- Git & Github  
+
+- Creating a blog & website with R and github
+
+- Automating R Markdown
+
+- Writing a Book with bookdown  
+
+- Creating interactive apps with R shiny  
