@@ -96,42 +96,6 @@ we often use R code to bring in images and things like that).
 <h2 class="intro-text text-center">
 <center>
 
-<strong>Exercises</strong>
-
-</center>
-</h2>
-<hr style="    border: 0;
-    height: 2px;
-    background: #333;
-    background-image: linear-gradient(to right, #ccc, #333, #ccc);">
-
-#### Exercise Sets
-
-##### Markdown & Git
-
--   <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1_.html">
-    Exercises 1 - </a> (Solutions:
-    <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1__Solutions.html">
-    HTML</a>,
-    <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1__Solutions.Rmd">
-    Rmd</a>)
-
-##### Shiny
-
--   <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1_.html">
-    Exercises 1 - </a> (Solutions:
-    <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1__Solutions.html">
-    HTML</a>,
-    <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1__Solutions.Rmd">
-    Rmd</a>)
-
-<hr style="    border: 0;
-    height: 2px;
-    background: #333;
-    background-image: linear-gradient(to right, #ccc, #333, #ccc);">
-<h2 class="intro-text text-center">
-<center>
-
 <strong>Learning Resources</strong>
 
 </center>
@@ -305,10 +269,10 @@ Shiny Resources
     Reference](https://shiny.rstudio.com/reference/shiny/latest/)
 -   [Shiny
     Cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/01/shiny-cheatsheet.pdf)
--   Example Shiny Apps
--   [Shiny Gallery](https://shiny.rstudio.com/gallery/)
--   [Statistics Education Shiny
-    Apps](http://www2.stat.duke.edu/~mc301/shinyed/)
+
+Example Shiny Apps \* [Shiny
+Gallery](https://shiny.rstudio.com/gallery/) \* [Statistics Education
+Shiny Apps](http://www2.stat.duke.edu/~mc301/shinyed/)
 
 <hr>
 

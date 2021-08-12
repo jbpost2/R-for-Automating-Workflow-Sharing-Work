@@ -87,40 +87,7 @@ It may help to have just the R code from the slides so you can easily run the co
     background: #333;
     background-image: linear-gradient(to right, #ccc, #333, #ccc);">
 ```
-<h2 class="intro-text text-center">
 
-<center>
-
-<strong>Exercises</strong>
-
-</center>
-
-</h2>
-
-```{=html}
-<hr style="    border: 0;
-    height: 2px;
-    background: #333;
-    background-image: linear-gradient(to right, #ccc, #333, #ccc);">
-```
-#### Exercise Sets
-
-##### Markdown & Git
-
--   <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1_.html"> Exercises 1 - </a> (Solutions: <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1__Solutions.html"> HTML</a>, <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1__Solutions.Rmd"> Rmd</a>)
-
-##### Shiny
-
--   <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1_.html"> Exercises 1 - </a> (Solutions: <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1__Solutions.html"> HTML</a>, <a href = "https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/exercises/Exercises1__Solutions.Rmd"> Rmd</a>)
-
-
-
-```{=html}
-<hr style="    border: 0;
-    height: 2px;
-    background: #333;
-    background-image: linear-gradient(to right, #ccc, #333, #ccc);">
-```
 <h2 class="intro-text text-center">
 
 <center>
