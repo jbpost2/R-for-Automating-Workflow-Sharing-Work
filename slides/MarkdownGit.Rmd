@@ -1,0 +1,649 @@
+---
+title: "Markdown and Git"
+author: "Justin Post"
+output: 
+      ioslides_presentation:
+         css: ../css/style.css
+         widescreen: true
+logo: ../img/logo.png
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(haven)
+options(dplyr.print_min = 5)
+options(tibble.print_min = 5)
+library(knitr)
+library(htmlwidgets)
+opts_chunk$set(message = FALSE, cache = TRUE, warning = FALSE)
+```
+
+
+
+## Course Plan  
+
+- R Projects  
+
+- Markdown basics  
+
+- Git & Github  
+
+- Creating a blog & website with R and github
+
+- Automating R Markdown
+
+- Writing a Book with bookdown  
+
+- Writing emails with R
+
+- Automating R scripts to run  
+
+- Creating interactive apps with R shiny  
+
+## Look Ahead  
+
+
+## RStudio Project
+
+- Often have many files associated with an analysis  
+
+- With multiple analyses things get cluttered  
+
+
+## RStudio Project
+
+- Often have many files associated with an analysis  
+
+- With multiple analyses things get cluttered  
+
+- Want to associate different  
+<ul>
+   <li> environments </li>
+   <li> histories </li>
+   <li> working directories </li>
+   <li> source documents </li>
+</ul> 
+with each analysis
+
+> - Can use "Project" feature in R Studio  
+
+
+## RStudio - Project
+
+- Easy to create!  Use an existing folder or create one:
+
+```{r project.png, out.width = "600px",echo=FALSE, fig.align = 'center'}
+knitr::include_graphics("../img/project.png")
+```
+
+- Place all files for that analysis in that directory  
+
+
+## RStudio - Project  
+
+Create two new projects (with new empty folders):  
+
+- One called 'github_website'  
+
+- One called 'automation_of_markdown'  
+
+(We'll also create one later from git.)
+
+- On creation select the `renv` option  
+
+
+## RStudio - Project
+
+- Let's look at project options via `tools --> Project options`  
+
+- Switch between projects with the upper right menu
+
+- Modify and save the project.  Note the differing behavior of your R sessoin depending on your project options
+
+- Open the .Rproj file in notepad
+
+
+## Markdown Basics  
+
+- Vital to make your work reproducible!  
+
+> - Traditional documentation through comments (`#` in R) in script
+
+> - May have heard of [JUPYTER](http://jupyter.org/) notebooks  
+
+> - R Markdown - built in notebook for R studio (a program that weaves word processing and code)
+
+
+## Creating an R Markdown Document
+
+- Work in your 'github_website' project  
+
+- Create a new markdown doc via menus and let's explore it!
+
+```{r startMD.png, out.width = "700px",echo=FALSE, fig.align='center'}
+knitr::include_graphics("../img/startMD.png")
+```
+
+
+## Markdown **Verbage**
+
+- May have heard of HTML (HyperText Mark-up Language)  
+    + Write plain text that the browser interprets and renders  
+    
+    
+## Markdown **Verbage**
+
+- May have heard of HTML (HyperText Mark-up Language)  
+    + Write plain text that the browser interprets and renders  
+    
+- Markdown is a specific markup language  
+    + Easier syntax  
+    + Not as powerful  
+    
+- Any plain text file can be used (.Rmd extension associates it with R Studio)
+
+
+## R Markdown  
+
+R Markdown file contains three important types of content:
+
+1. (Optional) YAML header surrounded by `---`s  
+
+2. Chunks of R code   
+
+3. Text mixed with simple text formatting instructions 
+
+
+
+## R Markdown - **YAML Header**  
+
+ - Define settings for document  
+
+```
+---
+title: "Untitled"
+author: "First Last"
+date: "xxxx"
+output: html_document
+---
+```  
+
+- CTRL/CMD + Shift + k **knits** (creates the output document) via this info  
+
+- Can also knit via the little arrow to knit to a different format  
+
+- Can knit via the `rmarkdown::render()` function
+
+
+## R Markdown - **Code Chunks**  
+
+ - Below YAML header: 'r chunk'  
+
+```{r chunk_png, out.width = "500px",echo=FALSE, fig.align='center'}
+knitr::include_graphics("../img/chunk.png")
+```  
+
+> - Start code chunk by typing ```{r} out or with CTRL/CMD + Alt/Option + I
+
+> - Code will be executed when document is created    
+
+> - Can specify options on individual code chunks  
+
+
+## R Markdown - **Syntax**
+     
+- Below code chunk is plain text with markdown sytnax  
+
+```
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax
+for authoring HTML, PDF, and MS Word documents. For more details on
+using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that
+includes both content as well as the output of any embedded R code
+chunks within the document. 
+```
+
+- When file created, "##" becomes a header, "<...>" a link, and ```**Knit**``` bold font
+
+
+## R Markdown - **Syntax**
+
+### R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax
+for authoring HTML, PDF, and MS Word documents. For more details on
+using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that
+includes both content as well as the output of any embedded R code
+chunks within the document. 
+
+
+## Markdown
+
+Syntax is really easy to learn via the [Cheat sheet](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) 
+
+Quick look at the following:  
+
+- Markdown syntax  
+
+- Code chunks and their options  
+
+- Changing type of output  
+
+
+## **R Markdown syntax**  
+
+- ```# Header 1``` becomes a large font header  
+
+- ```## Header 2``` becomes a slightly smaller font header  
+
+- Goes to 6 headers  
+
+    + Use of headers can automatically create a Table of Contents!
+
+> - ```**bold**``` **and** ```__bold__```
+
+> - \`code\` becomes `code`  
+
+
+## **R Markdown syntax**  
+
+- Can do lists: be sure to end each line with two spaces!  
+
+    + Indent sub lists four spaces  
+
+<div style = "float: left; width: 50%">
+```
+* unordered list  
+* item 2  
+    + sub-item 1  
+    + sub-item 2  
+
+1. ordered list  
+2. item 2  
+    + sub-item 1  
+    + sub-item 2  
+```  
+</div>
+<div style = "float: right; width: 50%">
+* unordered list  
+* item 2  
+    + sub-item 1  
+    + sub-item 2  
+
+1. ordered list  
+2. item 2  
+    + sub-item 1  
+    + sub-item 2  
+</div>
+
+
+## **Code chunks and their options**  
+
+- Any R code can go into a chunk  
+
+> - Usually a 'set-up' chunk at the top to read in packages, set global chunk options, etc.  
+
+> - Chunks evaluate sequentially (can use output from prior chunk) that is saved as an R object - let's check that!
+
+
+## **Code chunks and their options**  
+
+- Many options depending on chunk purpose!    
+
+- Can hide/show code with `echo = FALSE/TRUE`  
+
+- Can choose if code is evaluated with `eval = TRUE/FALSE`   
+
+- `message = TRUE/FALSE` and `warning = TRUE/FALSE` can turn on/off displaying messages/warnings   
+
+```{r, fig.align='center', message = FALSE, out.width=275, echo = FALSE}
+knitr::include_graphics("../img/codeChunkGear.PNG")
+```
+
+
+## Documenting with Markdown  
+
+- R Markdown = Digital "Notebook":  Program that weaves word processing and code.  
+
+- Designed to be used in three ways (R for Data Science)  
+<ul>
+  <li>Communicating to decision makers (focus on conclusions not code)</li>
+  <li>Collaborating with other data scientists (including future you!)  </li>
+  <li> As environment to do data science (can evaluate and edit/reevaluate code chunks and document what you did and what you were thinking)</li>
+</ul>
+
+
+## **Changing type of output**  
+
+R Markdown really flexible!  
+
+```{r, echo = FALSE, fig.align='center'}
+knitr::include_graphics("../img/compile.png")
+```
+
+
+## **Changing type of output**  
+
+R Markdown really flexible!  
+
+```{r, echo = FALSE, fig.align='center'}
+knitr::include_graphics("../img/compile.png")
+```
+
+- Change output type in the YAML header and use CTRL/CMD + Shift + k
+
+- knit via the menu  
+
+- Use code explicity:  
+    `rmarkdown::render("file.Rmd", output_format = "html_document")`
+
+> - Outputting to PDF requires a version of Tex.  If you don't have one, install the `tinytex` package and run `tinytex::install_tinytex()`  
+
+> - Check that you can output to HTML, PDF, and Word using one of the above methods  
+
+## Other Options on Outputs  
+
+Check out [the R Markdown definitive guide](https://bookdown.org/yihui/rmarkdown/documents.html) for cool options for each type of output!  
+
+- Try to implement code folding, tabsets, and a TOC in an HTML output doc. Can you do it via `render`?
+
+- Try to implement the kable method of printing a data frame and a TOC in a PDF.  Can you do it via `render`?
+
+
+## Output to multiple formats  
+
+Multiple outputs in one call:
+
+- `rmarkdown::render("yourfile.Rmd", output_format = c("html_document", "pdf_document", "word_document")`
+
+- You can also change the name of the output files via the `output_file` argument  
+
+- Can you get it to output three files called 'my.html', 'your.pdf', 'their.docx' with one function call?
+
+- Let's try it!  (Note: You can't specify options when rendering to multiple formats)
+
+## R Markdown  
+
+- Great for document your code/thoughts and for sharing your analyses easily!  
+
+- Next, we'll learn about git/github and how RStudio can work with them
+
+- A similar Markdown language is used to render documents on github so we've already learned enough to create some basic webpages too :)
+
+
+## What are git and github?
+
+Ideally we want to document our process, easily collaborate, and widely share our work
+
+- To make our workflow for a project reproducible, ideally we would save different versions of our analysis, write-up, etc. along the way 
+
+- git is a version control software that easily allows multiple users to work on the **same** project.  It simply tracks the changes that we `commit` to the files.
+
+> - No more finaldoc.pdf, finalfinaldoc.pdf, finaldoc08_11_21.pdf, ...
+
+> - github is a hosting service that allows us to do Git-based projects on the internet and share them widely!
+
+
+## Tracking:  Basic idea 
+
+- Create a repository on github.com (files saved remotely)
+
+> - When you (or collaborator) want to work on it, you `clone` the repo locally (or `pull` the files down to update it)  
+
+> - You work, save things, etc.  
+
+> - Your work was good!  Nice.  Now you want to `add` your modified/new files to the repo so other can use them.  
+
+> - You then stage your `commit` (i.e. prepare everything to send back to the remote repo)  
+
+> - You `push` your local committed changes up the the repo on github 
+
+> - Everyone has access to it now!  
+
+
+## Collaboration: Basic idea
+
+Everyone can work on the same branch and update as needed (sometimes there will be merge conflicts, covered shortly)  
+
+> - People often `fork` the repo or create their own `branch` to work on, rather than modify the main repository
+
+> - Perhaps the main repo is being used for something and you don't want to `push` up your changes until they are tested or the new 'feature' is debugged  
+
+> - You work on your branch using the idea from the previous slide  
+
+> - Once happy with everything, you do a `merge` request to combine your modified repo with the main repo branch  
+
+
+## Visual 
+(from https://git.logikum.hu)  
+
+Each circle represents a 'commit' to that repository/branch (all version of files at each commit are kept!)
+
+```{r, out.width='55%', fig.align='center', echo = FALSE}
+knitr::include_graphics("../img/gitexample.svg")
+```
+
+## Wow - How do we get started??  
+
+Let's look at an [example repo](https://github.com/jbpost2/TeachingWithR) and the commits done/how it is tracked!  
+
+> - Start with basic workflow with yourself by creating a blog on github!  
+
+## Blog Instructions  
+
+- Sign into github.com and then go to [this repo](https://github.com/barryclark/jekyll-now)
+
+- Click `fork` in the top right corner.  This will give you a copy of this repo under your account!  
+
+- Visit https://yourgithubusername.github.io to see the default blog page (i.e. you already have a blog :)  
+
+
+## Blog Instructions  
+
+- Let's make some changes!  Click on the `_posts` folder.  Edit the file you see there by clicking on the name.  You can then click on the pencil in the right hand header for the file display.  
+
+    - Change the file name to today's date.  
+    - Update the title in the YAML header. 
+    - Use the markdown syntax we learned to write a short paragraph or two (no R code chunks though!)
+    - Write a commit message under 'Commit changes' and click the green button at the bottom  
+    
+- It may take 2 minutes but visit https://yourgithubusername.github.io again to see the changes.  
+
+- While you wait, update the about page of your blog by going to the main page of the repo and clicking on 'about.md'.  Make changes like before and commit!  
+
+
+## Cloning the repo  
+
+- To follow our previous idea (and to start doing this with R), we really don't want to use the web interface  
+
+- We can `clone` the repo (i.e. download the entire repo locally)  
+
+- Repo main page has a green button.  Click on that.  
+
+    + Can download a zip and unzip it to an appropriate folder  
+    + Can clone via the URL and terminal or RStudio  
+    
+- Open RStudio, go to new project, from Version Control, chooes Git, and paste in the repo link
+
+
+
+Let's get just a little practice using the CLI.  Open the CLI (type Git Bash into the search bar for Windows, go to /Applications/Utilities/ and launch the terminal window for Mac).  
+
+    Type ls to see what folders are in the current directory
+    Create a folder on your computer that you know the path to. Set your current directory to that path using cd "path/to/directory" Now run ls and you probably shouldn't see any subfolders
+    Type cd .. to move up one directory. Use the cd command to move back into the directory.
+    Create a new R file in the folder by typing touch exampleFile.R
+    Now run ls and you should see the file in the directory
+    You can actually edit the file through your shell. There are many great programs (such as emacs) you could use but by default I think you should have vim and nano. Let's use nano to open the file. Type nano exampleFile.R and you should enter into an editing mode.
+    Add the following command to the file (putting your path in), write.csv(file = "path/to/your/newdirectory/data.csv", rnorm(100)) On your keyboard press "Ctrl/Cmd O" to write out the changes, hit enter to submit the changes to the file. Then "Ctrl/Cmd X" to exit the editor.
+    Now we can run the file from the CLI!  We just need to call R (or in this case Rscript and tell it where the file is).  Since we are in the directory of the file we can use a relative path.  This code runs the file for me (your code may need to be slightly different).  
+    "C:/Program Files/R/R-3.5.1/bin/Rscript" exampleFile.R
+    You should now have a .csv file in the directory. You can remove files in the directory using rm. Be careful, you can erase a lot of things on accident! rm exampleFile.R
+
+Talking with Git/GitHub
+
+At this point we are ready to interact with Git through our computer.  Read chapter 7 and 8 of happygitwithr (opens in new window) - you may wish to install SourceTree (use Atlassian account) at this time, but we don't really need it.  Note: The editor I like to use is Notepad++.  You may want to install that and configure it to work (opens in new window)(optional).
+
+Read through chapter 9 (opens in new window) and try to modify a repository.  We'll learn more about pushing, pulling, and committing in a bit so if you don't understand what is going on exactly, don't worry.  Just try to run the commands they do there and see if you get the appropriate changes to the files.  
+
+You'll want to do automatic authentication - check out chapters 10 and 11 (opens in new window) (11 is recommend) to do this.
+Using Git/GitHub through RStudio
+
+Lastly, we want to make it easy to connect to our repositories through RStudio.  If we get this done, we won't need to download files and reupload them.  This can all be done using commands in RStudio! Read chapter 1 (opens in new window)2 to get things working.  If you are having an issue, chapters 13 (opens in new window) and 14 (opens in new window)give some common issues and how to resolve them.
+
+Once you've worked through this, you are ready to go!
+Understanding Git/GitHub
+
+There are two resources below to help you understand Git and version control.  You can view whichever you prefer (or both) - the video is a bit long but uses RStudio so that is nice smile 
+
+
+Read - Creating a Blog with Github
+Getting Comfortable with github
+
+First, go to github.com (opens in new window) and signup for a github account (if you haven't already).  Once you have an account, read this introduction to github (opens in new window) here (we'll look at using git and the command line later in the course - for now we'll stick to the web editor).  Follow the steps to create your first repository, fork, and merge!
+Creating a Blog
+
+You should now have some idea about what the point of github is and how to roughly use it from the web interface.  However, github can serve many purposes! 
+
+The Build A Blog With Jekyll And GitHub Pages article here (opens in new window) outlines the use of github for creating a blog.  You should read this article up to the "Optional Steps" section.  Following along with this article is roughly half of your "First Blog post" assignment (the other half is you writing something!).  
+
+
+
+
+
+
+
+## Markdown Parameters  
+
+Parameters can be added to the YAML header  
+
+ - Can help to automate reports!
+
+ - Suppose we are dealing with our football boxscore data set  
+```{r, message = FALSE}
+NFLData <- read_csv("../datasets/scoresFull.csv")
+NFLData
+```
+ 
+
+## Markdown Parameters  
+
+Parameters can be added to the YAML header  
+ 
+```
+title: "NFL Reports"
+author: "Justin Post"
+output: html_document  
+params: 
+      team: "Pittsburgh Steelers"
+```
+- Can 'Knit with parameters'  
+
+- In .Rmd, access via `params$team`  
+
+> - Example: Let's open up the [NFL.html document](https://www4.stat.ncsu.edu/~post/ST558/files/NFL.html)
+
+
+## Parameters  
+
+May want to create a similar document for all 32 teams  
+
+- Utilize code method for knitting the document
+
+```{r, eval = FALSE}
+rmarkdown::render("files/NFL.Rmd", output_file = "Cleveland Browns.html", 
+									params = list(team = "Cleveland Browns"))
+```
+
+- Would create same document for Cleveland Browns  
+
+
+## Parameters  
+
+Plan:  
+
+- Create data frame that has  
+
+    + file names to output to  
+    
+    + list with each team name for using in `render()`
+
+For one team the row would be (last column's value is really a list with one value in it)  
+
+```{r, echo = FALSE}
+data.frame(output_file = "Pittsburgh Steelers.html", params = list(team = "Pittsburgh Steelers"))
+```
+
+##Parameters  
+
+```{r, eval = TRUE, echo = TRUE, message = FALSE}
+#get unique teams
+teamIDs <- unique(NFLData$awayTeam)
+#create filenames
+output_file <- paste0(teamIDs, ".html")
+#create a list for each team with just the team name parameter
+params = lapply(teamIDs, FUN = function(x){list(team = x)})
+
+#put into a data frame 
+reports <- tibble(output_file, params)
+```
+
+## Parameters  
+
+```{r}
+reports
+```
+
+## Parameters  
+
+Now knit using `apply()` or via `pwalk()` from the `purrr` package 
+
+```{r, eval = FALSE, echo = TRUE}
+library(rmarkdown)
+#need to use x[[1]] to get at elements since tibble doesn't simplify
+apply(reports, MARGIN = 1, 
+			FUN = function(x){
+				render(input = "files/NFL.Rmd", output_file = x[[1]], params = x[[2]])
+				})
+
+#or with pwalk (args are .l, .f, and ...)
+#.l is a list of lists, .f is function, formula, or vector
+pwalk(reports, render, input = "files/NFL.Rmd")
+```
+
+
+## Parameters  
+
+This can be done with multiple parameters.  
+
+- Nice way to automate creation  
+
+- Could put into a nice pipeline  
+
+    + Create file to update NFL data each week (scrape new data and add to .csv file)  
+    
+    + Create .Rmd file that you want for each team  
+    
+    + Create file to submit creation of documents with params  
+    
+    + Put all into one file (say with `source`)  
+    
+    + Run that file with CLI to update with one command!  
+    
+
+
+
+## Quick Examples  
+
+- Go to the <a href = "https://jbpost2.github.io/Basics-of-R-for-Data-Science-and-Statistics/CourseFiles.html">course files page</a> and try Exercise 5 - Markdown
+
+
+    
+    
+    
+## Bookdown

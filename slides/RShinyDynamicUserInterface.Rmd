@@ -1,0 +1,568 @@
+---
+title: "RShiny: Dynamic UI"
+author: "Justin Post"
+output:       
+      ioslides_presentation:
+         css: style.css
+         widescreen: yes
+transition: faster
+logo: logo.png
+runtime: shiny
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(dplyr)
+options(dplyr.print_min = 5)
+library(knitr)
+library(readr)
+library(plotly)
+library(DT)
+opts_chunk$set(echo = FALSE)
+```
+
+
+## Summary So Far   
+`ui.r`    
+
+  - Controls layout of app    
+  - Basic layout uses a sidebar panel and a main panel    
+  - Use strings, formatted (html style) text, widgets (`*Input` functions), and output from `server.r`  (`*Output` functions)    
+  - Separate items with commas      
+  
+`server.r`    
+
+  - Back-end for app      
+  - Create outputs that react to inputs (`render*` functions)      
+  - To respond to input, must be in a reactive context      
+
+
+##  Dynamic UI  
+  
+  - Often want to update UI based on user input!  
+  
+ > - Recall:  UI and Server basically pass lists back and forth
+
+ > - Methods for updating UI  
+     <ul>  
+         <li> `update*` functions</li>  
+         <li> `renderUI()`/`uiOutput()`</li>
+         <li> `conditionalPanel()`</li>  
+      </ul>  
+      
+      
+##  Using update* Functions  
+
+  - Every input widget has a corresponding update function  
+    + `updateActionButton()`  
+    + `updateCheckboxInput()`  
+    + `updateNumericInput()`  
+    + ...
+ 
+## Using update* Functions  
+
+  - Every input widget has a corresponding update function  
+    + `updateActionButton()`  
+    + `updateCheckboxInput()`  
+    + `updateNumericInput()`  
+    + ...
+    
+  - Require session argument on server() function  
+```{r session,echo=TRUE,eval=FALSE}
+shinyServer(function(input, output, session) {
+  ##  do stuff
+})
+```  
+
+## Using update* Functions  
+
+  - Every input widget has a corresponding update function  
+    + `updateActionButton()`  
+    + `updateCheckboxInput()`  
+    + `updateNumericInput()`  
+    + ...
+    
+  - Require session argument on server() function  
+```{r session2,echo=TRUE,eval=FALSE}
+shinyServer(function(input, output, session) {
+  ##  do stuff
+})
+```  
+  - After all observers (reactive things) evaluate, updater sends message back to client
+
+
+
+## Using update* Functions
+
+  - Syntax of `update*` functions similar to the functions that created the inputs
+  
+Example syntax:  
+
+```{r update, echo = TRUE, eval = FALSE}
+numericInput(inputId, label, value, min = NA, max = NA, step = NA,
+  width = NULL)
+
+updateNumericInput(session, inputId, label = NULL, value = NULL,
+  min = NULL, max = NULL, step = NULL)  
+```  
+
+
+
+## Using update* Functions
+
+  - Syntax of `update*` functions similar to the functions that created the inputs
+  
+Example syntax:  
+
+```{r update2, echo = TRUE, eval = FALSE}
+numericInput(inputId, label, value, min = NA, max = NA, step = NA,
+  width = NULL)
+
+updateNumericInput(session, inputId, label = NULL, value = NULL,
+  min = NULL, max = NULL, step = NULL)  
+```  
+
+  - Any arguments with `NULL` values ignored (i.e. will not result in any changes to the input object)
+
+>  - For `radioButtons()`, `checkboxGroupInput()`, and `selectInput()`, the set of choices can be cleared by using `choices = character(0)` (similary for the set of selected)
+
+## Using `update*` Functions  
+```{r update-ftns, eval = TRUE, echo = FALSE}
+library(shiny)
+shinyApp(
+  # Define UI for application that draws a histogram
+  ui <- fluidPage(
+     # Application title
+     titlePanel("Old Faithful Geyser Data"),
+     # Sidebar with a slider input for number of bins 
+     sidebarLayout(
+        sidebarPanel(
+           sliderInput("bins", 
+                       "Number of bins:", 
+                       min = 1, 
+                       max = 50, 
+                       value = 30), 
+           numericInput("maxBins",label="Set Maximum Number of Bins", value = 50, min = 1, max = 100)
+        ),
+        # Show a plot of the generated distribution
+        mainPanel(
+           plotOutput("distPlot")
+        )
+     )
+  ),
+  # Define server logic required to draw a histogram
+  server <- function(input, output, session) {
+     output$distPlot <- renderPlot({
+        # generate bins based on input$bins from ui.R
+        x    <- faithful[, 2] 
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+        
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = 'darkgray', border = 'white')
+     })
+     
+     observe({updateSliderInput(session,"bins",max=input$maxBins)})
+  }
+)
+```  
+
+## `updateSliderInput()` (First Attempt)
+```{r updateslider,eval=FALSE,echo=TRUE}
+  ui <- fluidPage(
+        ...
+        sidebarPanel(
+           sliderInput("bins", "Number of bins:", 
+                       min = 1, max = 50, value = 30),
+           numericInput("maxBins", label = "Set Maximum Number of Bins",
+                        value = 50, min = 1, max = 100)
+        ),
+        ...
+  ),
+  server <- function(input, output, session) {
+      ...
+      updateSliderInput(session, "bins", max = input$maxBins)
+  }
+)
+```  
+What is our issue?
+
+## `updateSliderInput()` (Fixed)
+```{r updateslider2,eval=FALSE,echo=TRUE}
+  ui <- fluidPage(
+        ...
+        sidebarPanel(
+           sliderInput("bins", "Number of bins:",
+                       min = 1, max = 50, value = 30),
+           numericInput("maxBins", label = "Set Maximum Number of Bins",
+                        value = 50, min = 1, max = 100)
+        ),
+        ...
+  )
+  server <- function(input, output, session) {
+      ...
+      observe({updateSliderInput(session, "bins", max = input$maxBins)})
+  }
+``` 
+
+## `update*` UI Functions  
+
+ - Use the template app  
+ 
+ - Try to add a numeric input for the user to specify the largest value of the slider  
+ 
+ - Use the `updateSliderInput` function to update the max of the slider  
+ 
+ - Don't forget `observe`!  
+ 
+ - Then, add an `actionButton` to only update when pressed (so no intermediate updates while typing)  
+  
+ 
+
+## `renderUI()` and `uiOutput()`  
+
+  - Alternatively, `renderUI()` and `uiOutput()` can be used  
+
+
+## `renderUI()` and `uiOutput()`  
+
+  - Alternatively, `renderUI()` and `uiOutput()` can be used  
+  - Recall: Shiny essentially writes HTML/JavaScript for us!
+```{r html,echo=TRUE,eval=TRUE}
+print(fluidPage(titlePanel(title = "Hi"),
+                sidebarLayout(sidebarPanel(), mainPanel())))
+```
+
+
+## `renderUI()` and `uiOutput()`  
+
+  - Alternatively, `renderUI()` and `uiOutput()` can be used  
+  - Recall: Shiny essentially writes HTML/JavaScript for us!
+```{r html2,echo=TRUE,eval=TRUE}
+print(numericInput("id", "Label User Sees", value = 10))
+```
+
+## `renderUI()` and `uiOutput()`  
+
+`renderUI()`    
+  
+ + Makes a **reactive version** of a function that generates HTML (like any widget)
+      
+> + Have `renderUI()` return a shiny 'tag object,', HTML, or a list of these    
+<br>
+<br>
+> + Use with `uiOutput()` in UI file     
+
+> + Interprets the HTML and outputs appropriately (usually a `div` element)  
+
+
+## `renderUI()` and `uiOutput()` (updating a widget)  
+
+```{r renderui-widget,eval=FALSE,echo=TRUE}
+  ui <- fluidPage(
+        ...
+        sidebarPanel(
+            uiOutput("slider"),
+            numericInput("maxBins", label = "Set Maximum Number of Bins",
+                         value = 50, min = 1, max = 100)
+        ),
+        ...
+  ),
+  server <- function(input, output, session) {
+      ...
+      output$slider <- renderUI({
+          sliderInput("bins", "Number of bins:", min = 1,
+                      max = input$maxBins, value = 30)
+      })
+  }
+``` 
+
+## `renderUI()` and `uiOutput()` (outputting HTML)  
+
+```{r renderui-info,eval=FALSE,echo=TRUE}
+  ui <- fluidPage(
+        ...
+        sidebarPanel(
+             uiOutput("info"),
+             numericInput("purchase", label = "How Many?",
+                          value = 50, min = 0, max = 100)
+        ),
+        ...
+  ),
+  server <- function(input, output, session) {
+      ...
+        output$info <- renderUI({
+          text <- paste0("You have selected to buy ", input$purchase)
+          h3(text)
+        })
+  }
+``` 
+
+## `renderUI()` and `uiOutput()`  
+
+```{r renderui-ex,eval=TRUE,echo=FALSE}
+library(shiny)
+
+shinyApp(
+  # Define UI for application that draws a histogram
+  shinyUI(fluidPage(
+    
+    # Application title
+    titlePanel("Graph is Meaningless Here!"),
+    
+    # Sidebar 
+    sidebarLayout(
+      sidebarPanel(
+         uiOutput("info"),
+         numericInput("purchase",label="How Many?",
+                      value=50,min=0,max=100)
+      ),
+      
+      # Show a plot of the generated distribution
+      mainPanel(
+         plotOutput("distPlot")
+      )
+    )
+  )),
+  shinyServer(function(input, output,session) {
+   
+    output$distPlot <- renderPlot({
+  
+      # draw the histogram with the specified number of bins
+      hist(rnorm(input$purchase), col = 'darkgray', border = 'white')
+      
+    })
+    
+    output$info<-renderUI({
+      text<-paste0("You have selected to buy ",input$purchase)
+      h3(text)
+    })
+
+  })
+)
+```
+
+
+## `renderUI()` and `uiOutput()`   
+
+- Use the template app  
+
+- Try to add some dynamic updating text to the UI  
+
+
+## `conditionalPanel()`  
+
+  - Create a 'panel' that is only visible if a condition is met  
+
+ > - Condition can depend on input or output value   
+ 
+ > - Accessed differently!  (Use a '.' not a '$')  
+
+
+## `conditionalPanel()`  
+
+```{r cond-panel-ex,echo=FALSE,eval=TRUE,message=FALSE}
+library(shiny)
+library(ggplot2)
+library(dplyr)
+data2<-filter(diamonds,(diamonds$depth>55)&(diamonds$depth<70))
+shinyApp(
+  # Define UI for application that draws a histogram
+  shinyUI(fluidPage(
+    
+    # Application title
+    titlePanel("Plots of Diamonds Data"),
+    
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+      sidebarPanel(
+        selectInput("plotType", "Plot Type",
+                    c(Scatter = "scatter",Histogram = "hist")),
+        
+        # Only show this panel if the plot type is a histogram
+        conditionalPanel(condition = "input.plotType == 'hist'",
+                         selectInput("breaks", "Breaks",
+                                     c("Sturges","Scott","Freedman-Diaconis","[Custom]" = "custom")),
+                         
+           # Only show this panel if Custom is selected
+          conditionalPanel(
+            condition = "input.breaks == 'custom'",
+            sliderInput("breakCount", "Break Count", min=1, max=200, value=40)
+          )
+        )
+      ),
+      
+      # Show a plot of the generated distribution
+      mainPanel(
+         plotOutput("distPlot")
+      )
+    )
+  )),
+  # Define server logic required to draw a histogram
+  shinyServer(function(input, output,session) {
+     
+    output$distPlot <- renderPlot({
+  
+      #depending on plot type create hist or scatterplot
+      if(input$plotType=="scatter"){
+        plot(x=data2$carat,y=data2$depth,xlab="Carat",ylab="Depth")
+      } else {
+        if(input$breaks=="custom"){
+          hist(data2$depth,breaks=input$breakCount)
+        } else {
+          hist(data2$depth,breaks=input$breaks,xlab="Depth")
+        }
+      }
+  
+    })
+    
+  })
+)
+```
+  
+## `conditionalPanel()`  
+```{r cond-panel-syntax,echo=TRUE,eval=FALSE}
+...
+sidebarPanel(
+  selectInput("plotType", "Plot Type",
+            c(Scatter = "scatter", Histogram = "hist")),
+  
+  # Only show this panel if the plot type is a histogram
+  conditionalPanel(condition = "input.plotType == 'hist'",
+          selectInput("breaks", "Breaks",
+               c("Sturges", "Scott", "Freedman-Diaconis", "[Custom]" = "custom")),
+                       
+      # Secondary conditonalPanel, Only show this panel if Custom is selected
+      conditionalPanel(
+          condition = "input.breaks == 'custom'",
+          sliderInput("breakCount", "Break Count", min = 1, max = 200, value = 40)
+      )
+  )
+)
+```
+
+## `conditionalPanel()`  
+
+- Use the template app  
+
+- Try to add a new UI element if a condition on the slider is met  
+
+
+## Dynamic UI Recap  
+  
+- Often want to update UI based on user input!  
+  
+- Recall:  UI and server basically pass lists back and forth  
+
+- Methods for updating UI  
+    + `update*` functions  
+    + `renderUI()`/`uiOutput()`  
+    + `conditionalPanel()`  
+
+ 
+ 
+
+## Custom UI Layout  
+  - Contents of UI wrapped in `fluidPage()`  
+  
+> - Content can be wrapped in `fluidRow()`'s  
+  
+> - Columns can be created with `column(width, offset)` 
+  
+> - Columns should sum to 12 in total width for an 'area'!
+    
+
+## Customized Layout
+```{r custom-layout,eval=TRUE,echo=FALSE}
+shinyUI(fluidPage(
+  fluidRow(
+    column(2,"fluidRow with columns-----------------------------------------------------------------------"),
+    column(6,"2nd column------------------------------------------------------------------------------------------------------------------------"),
+    column(4,"column widths in a given row should add to 12-------------------------------------------------------------")),
+  fluidRow(tags$hr()),
+  fluidRow(
+    column(6,"2nd fluidRow below above row--------------------------------------------------------------------------------------------"),
+    column(6,
+           fluidRow("Columns can contain their own fluidRow as well, allowing for a lot of customization of layouts!"),
+           fluidRow(
+             column(3,"subcol --------------------------------------------"),
+             column(9,"subcol ----------------------------------------------------------------------------------------------------------------")
+           ))
+  )
+))
+```  
+
+
+***  
+```{r custom-layout2,eval=FALSE,echo=TRUE}
+shinyUI(fluidPage(
+  fluidRow(
+    column(2,"fluidRow with columns--------...---------"),
+    column(6,"2nd column------------...--------"),
+    column(4,"column widths in a given row must add to 12------...---------")),
+  fluidRow(tags$hr()),
+  fluidRow(
+    column(6,"2nd fluidRow below above row----...-----"),
+    column(6,
+           fluidRow("Columns can contain their own fluidRow as well, allowing for a lot of customization of layouts!"),
+           fluidRow(
+             column(3,"subcol ----...-----"),
+             column(9,"subcol ----...-----")
+           ))
+  )
+))
+```
+	
+## More customization  
+
+- Can wrap UI elements with `wellPanel()`  
+
+    + Puts elements together in grey area  
+    
+    
+## More customization  
+
+- Can wrap UI elements with `wellPanel()`  
+
+    + Puts elements together in grey area  
+    
+- `tabPanel()` is like a UI page of its own  
+
+    + Used with `tabsetPanel()` or `navbarPage()`  
+
+`    tabsetPanel(`  
+`            tabPanel("Title1", "contents"),`  
+`            tabPanel("Title2", "contents")`  
+`)`  
+    
+## More customization  
+
+- `navbarMenu()`  
+
+- `navlistPanel()` 	
+
+- `fixedPanel()`  
+
+- `fixedrow()`
+
+
+## Quick Try  
+
+- Let's use `wellPanel()`, `fluidRow()`, and `columns()`
+
+- Recreate side-bar layout
+
+
+## Recap  
+`ui.r`   
+
+  - Controls layout of app (can use standard layouts or customize)  
+  - Use strings, formatted (html style) text, widgets (`*Input` functions), and output from `server.r`  (`*Output` functions)  
+  - Separate items with commas  
+  - Update inputs, render HTML reactively, conditionally show input  
+  
+`server.r`  
+
+  - Back-end for app  
+  - Create outputs that react to inputs (`render*` functions)  
+  - To respond to input, must be in a reactive context  
+  - Code can be included prior to `shinyServer()`  
+  

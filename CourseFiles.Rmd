@@ -280,8 +280,9 @@ Shiny Resources
 * [Shiny Apps](http://www.shinyapps.io/)
 * [Shiny Articles](http://shiny.rstudio.com/articles/)
 * [Shiny Funtions Reference](https://shiny.rstudio.com/reference/shiny/latest/)
-* [Shiny Cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/01/shiny-cheatsheet.pdf)
-* Example Shiny Apps
+* [Shiny Cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/01/shiny-cheatsheet.pdf)  
+
+Example Shiny Apps
 * [Shiny Gallery](https://shiny.rstudio.com/gallery/)
 * [Statistics Education Shiny Apps](http://www2.stat.duke.edu/~mc301/shinyed/)
 
