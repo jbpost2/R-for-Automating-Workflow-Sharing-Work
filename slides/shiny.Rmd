@@ -1,5 +1,5 @@
 ---
-title: "RShiny: Basics and User Interface"
+title: "R Shiny"
 author: "Justin Post"
 output:       
       ioslides_presentation:
@@ -100,10 +100,10 @@ renderPlot({
 knitr::include_graphics("shinyDoc.PNG")
 ```
 
-## Adding Widgets  
+## UI: Adding Widgets  
 
+  - Shiny components (widgets & outputs) go in R code chunks  
   - Widgets can be added using their `*Input` functions  
-  - You can just place widgets within an R code chunk!  
 
 ```{r, out.width = "85%", fig.align='center'}
 knitr::include_graphics("widgets.PNG")
@@ -113,6 +113,7 @@ knitr::include_graphics("widgets.PNG")
 ## Widget Example  
 
 ```{r, eval = FALSE, echo = TRUE}
+library(shiny)
 numericInput("num", "Enter a Number", value = 0, min = 0, max = 100)
 sliderInput("slide", label = "A Slider!", min = 0, max = 1, value = 0.5, step = 0.05)
 ```
@@ -123,7 +124,7 @@ sliderInput("slide", label = "A Slider!", min = 0, max = 1, value = 0.5, step = 
 ```
 
 
-## Adding Formatted Text  
+## UI: Adding Formatted Text  
 
 Can also add:  
 
@@ -150,7 +151,7 @@ sliderInput("slide", label = "A Slider!", min = 0, max = 1, value = 0.5, step = 
 ```
 
   
-## Formatting  
+## UI: Formatting  
 
 - `inputPanel()` allows you to add user inputs, text, etc. in a single row  
 
@@ -184,8 +185,17 @@ inputPanel(
 )
 ```
 
+## UI: More About Widgets
 
-## Creating Outputs
+- Widgets all follow the same structure
+
+- `widgetName("internalID", label = "Title the user sees", ...)`
+
+- The `internalID` is how you access the inputs when creating plots, summaries, etc.  
+
+
+
+## Server: Creating Outputs
 
 - Outputs can be created using their `render*` functions  
 
@@ -195,13 +205,6 @@ knitr::include_graphics("render.PNG")
 
 
 
-## More About Widgets
-
-- Widgets all follow the same structure
-
-- `widgetName("internalID", label = "Title the user sees", ...)`
-
-- The `internalID` is how you access the inputs when creating plots, summaries, etc.  
 
 
 ## Plot Example
@@ -235,61 +238,6 @@ renderPlot({
 ```
 
 
-## Quick Sampling Distribution Example
-
-Code to create some samples  
-
-- rows 1:n represents a sample of size n
-- each column represents a data set
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-simData <- replicate(1000, rexp(n = 50, rate = 1)) %>% 
-  as_tibble()
-simData
-```
-
-
-## Distribution of $\overline{Y}$ from a RS of Exp(1)  
-
-```{r, echo = TRUE, eval = FALSE}
-inputPanel(
-  numericInput("sampleSize", label = "Sample Size", 
-               min = 2, max = 50, value = 10, step = 1),
-  sliderInput("numSamples", label = "Number of Simulations", 
-              min = 1, max = 1000, value = 1, step = 1, 
-              animate = animationOptions(interval = 325))
-)
-
-renderPlot({
-      ggplot(simData %>% 
-               slice_head(n = input$sampleSize) %>% 
-               select(1:input$numSamples) %>% 
-               colMeans() %>% 
-               as_tibble(), 
-             aes(x = value)) + 
-        geom_histogram(color = "Blue", size = 2)  
-    })
-```
-
-## Distribution of $\overline{Y}$ from a RS of Exp(1)  
-
-```{r, echo = FALSE, out.width=4}
-inputPanel(
-  numericInput("sampleSize", label = "Sample Size", min = 2, max = 50, value = 10, step = 1),
-  sliderInput("numSamples", label = "Number of Simulations", min = 1, max = 1000, value = 1, step = 1, animate = animationOptions(interval = 325))
-)
-
-renderPlot({
-      ggplot(simData %>% 
-               slice_head(n = input$sampleSize) %>% 
-               select(1:input$numSamples) %>% 
-               colMeans() %>% 
-               as_tibble(), 
-             aes(x = value)) + 
-        geom_histogram(color = "Blue", size = 2)  
-    })
-```
-
 ## Much more to learn!
 
 - Stand alone apps  
@@ -301,48 +249,27 @@ renderPlot({
 - Hosting an app [https://www.shinyapps.io/](shinyapps.io)
 
 
+## Example
 
-## Elements of an App
-  - Each app has two things
-    * User Interface (UI) 
-    * Server     
+Using the R Markdown shiny template file, do the following:
 
-## Elements of an App
-  - Each app has two things
-    * User Interface (UI) 
-    * Server     
-    
-  - UI determines **layout** of app  
-      + Sets up widgets (items users can interact with)  
+- Add a `checkboxInput()` after the `sliderInput()`  
 
+- Internally, reference the checkbox as `'prob'` and set the default value to `TRUE`  
 
-## Elements of an App
-  - Each app has two things
-    * User Interface (UI) 
-    * Server     
-    
-  - UI determines **layout** of app  
-      + Sets up widgets (items users can interact with)  
-  
-  - Server contains R code to **run for the app**  
-      + Can include plots, model fitting, any R code really...  
+- In the `renderPlot()`, replace the code for the histogram with 
+
+```{r, eval = FALSE, echo = TRUE}
+  hist(faithful$eruptions, probability = input$prob, breaks = as.numeric(input$n_breaks),
+       xlab = "Duration (minutes)", main = "Geyser eruption duration")
+  if(input$prob){
+    dens <- density(faithful$eruptions, adjust = input$bw_adjust)
+    lines(dens, col = "blue")
+  }
+```
 
 
-## Elements of an App
-  - Each app has two things
-    * User Interface (UI) 
-    * Server     
-    
-  - UI determines **layout** of app  
-      + Sets up widgets (items users can interact with)  
-  
-  - Server contains R code to **run for the app**  
-      + Can include plots, model fitting, any R code really...  
-    
-  - Can do with single file (`app.R`) but we'll use a separate file (`ui.R` and `server.R`)
-
-
-## Two File Approach    
+## Stand Alone Apps: Two File Approach    
 
  - Create folder for each App you create  
 
@@ -430,16 +357,6 @@ Using a comma to separate items, you can add
 - Output from things created in the `server.R` file  
   
   
-
-## Sharing Between Server and UI  
-
-- Widgets are used to take input from the user  
-
-- Use their values in `server.R`   
-
-- Functions in `server.R` will create output to go in the `ui.R`  
-
-    
 ## Sharing Between Server and UI  
 ![](outputsUI.PNG)  
 
@@ -528,12 +445,25 @@ shinyApp(
   - Separate items with commas      
 
 
-## Basic UI Exercise
+## Quick Try
 
+In the two-file template app:
 
+- In the sidebar, above the slider, add a link to the old faithful page here:  
+
+https://www.yellowstonepark.com/things-to-do/geysers-hot-springs/about-old-faithful/
+
+- Below the slider in the sidebar, Add a radio button widget that is titled `Summaries of Data`
+
+    + This should allow the user to select `none`, `eruptions`, `waiting` or `both`  
+    
+    + The default value should be `none`
+    
+    
 
 ## Server file  
-`server.r` also called the 'back-end' because it works behind-the-scenes; its actions are not directly visible
+`server.r` also called the 'back-end' because it works behind-the-scenes
+
 
 ```{r server-basics, eval=FALSE,echo=TRUE}
 ## set up server
@@ -647,15 +577,26 @@ output$nameOfOutputObject <- renderPlot(
 ```    
 
 
-## Quick Try  
+## Quick Try: Using the template app  
 
-- Using the template app  
+- Add a text output object in the `server.R` file (use `renderText()`) that returns the current value of the input slider   
 
-- Add text output object in the `server.R` file (use `renderText()`) that returns the current value of the input slider   
-
-- To do this, just reference the input (like an R function, it will return the last thing you do)  
+- To do this, call `renderText(input$bins)` and just reference the input  
 
 - Add a `textOutput()` in the `ui.R` file!  
+
+- Add a `renderPrint()` that outputs the numeric summary requested from the `radioButtons()` created earlier (you'll also need a corresponding `verbatimTextOutput()` in the UI)
+
+```{r, eval = FALSE, echo = TRUE}
+if(input$radio == "eruptions"){
+  summary(faithful$eruptions)
+} else if(input$radio == "waiting"){
+  summary(faithful$waiting)
+} else if(input$radio == "both"){
+  summary(faithful)
+}
+```
+
 
 
 ## Reactivity  
@@ -745,7 +686,7 @@ Warning: Error in .getReactiveEnvironment()$currentContext: Operation not allowe
 shinyServer(function(input,output){
   #Creates a new reactive variable
   newVar <- reactive({
-    value <- c(input$NI + 10, input$NI * 3)
+    val <- c(input$NI + 10, input$NI * 3)
   })
 
   output$textString <- renderText({
@@ -764,18 +705,18 @@ shinyServer(function(input,output){
 ## `reactiveValues()`  
 
 - Create list like object with `reactiveValues()`  
-
-- Access elements via `$` 
-
+- Access elements via `$`  
 - Elements can be changed in a reactive context    
 
 ```{r reactiveValues,echo=TRUE,eval=FALSE}
 shinyServer(function(input,output){
   #Creates a new reactive values
-  vals <- reactiveValues(data = rnorm(150), initial = 0)
+  vals <- reactiveValues(data = rnorm(150), sliderval = 0)
+
+  observe({vals$sliderval <- input$slider})
 
   output$textString <- renderText({
-    paste0("The value of initial is ", vals$initial)
+    paste0("The value is ", vals$sliderval)
   })
   
   output$hist <- renderPlot({
@@ -787,8 +728,6 @@ shinyServer(function(input,output){
 ## `observe({})`  
 
   - Can read reactive values and call reactive expressions    
-
->  - Doesn't yield a result - just re-executes the code
 
 ```{r correct-reactivity,echo=TRUE,eval=FALSE}
 shinyServer(function(input,output){
@@ -844,15 +783,13 @@ shinyServer(function(input,output){
 
 - Continue building from the template app  
 
-- Add two `numericInput()` elements and an `actionButtion()`  
+- Add a `numericInput()` element and an `actionButtion()`  
 
-- Create a `reactive()` object that uses the number inputs and the slider value  
+- Create a `square <- reactive({})` object that stores the square of the numeric input
 
-- Use this object in the previous `renderText()` and output a new table (add this in UI as well)  
+- Use the output of `reactive()`  to add to the `renderText()` using something like `paste("Bins:", input$bins, "The square is ", square())`
 
-- Use `observeEvent()` to print something to the console only when the action button is pressed  
-
-- Use `eventReactive()` to change some output only when the action button is pressed
+- Use `observeEvent()` to print the value of `square()` (`print(square)`) to the console when the action button is pressed
 
 
 ## Developing an App
@@ -1060,7 +997,7 @@ What is our issue?
  
  - Don't forget `observe`!  
  
- - Then, add an `actionButton` to only update when pressed (so no intermediate updates while typing)  
+ - Then, use the `actionButton` to only update the slider when it is pressed (so no intermediate updates while typing)  
   
  
 
@@ -1425,6 +1362,34 @@ shinyUI(fluidPage(
 ![](publish.PNG)     
 
 
+## `shinyapps.io`  
+
+- First install the `rsconnect` package  
+
+- Go to shinyapps.io, log in, and then click on tokens in the top right
+
+- Click on show on the right hand side  
+
+- In the box that pops up, click on show secret
+
+- Copy that line of code and run it in your console  
+
+
+## `shinyapps.io`  
+
+- Go to your `ui.R` or `server.R`
+
+- Click on the publish icon in the top right  
+
+- Click publish on the box that pops up  
+
+- It may take a few minutes to deploy... but that's it!  
+
+- Go to shinyapps.io to see your app
+
+(You can view usage stats and what-not)  
+
+
 ##  Sharing App
 
  - Can host files on gitHub and run locally from there using  
@@ -1529,75 +1494,17 @@ output$plot <- renderPlot({
 })
 ```
 
-## More Interactive Plots & Math  
-
-  - Improved plots with `plotly` package!  
-  - [plotly example](http://shiny.stat.ncsu.edu/jbpost2/Transform/)  
-  
-
-## More Interactive Plots & Math  
-
-  - Improved plots with `plotly` package!  
-  - [plotly example](http://shiny.stat.ncsu.edu/jbpost2/Transform/)  
-  
-  - Can add in Latex easily!  
-  
-  - Include `withMathJax()` as a UI argument   
-
-  - Calls in javascript that will replace Latex source code  
-
-```{r withMathJax,echo=TRUE,eval=FALSE}
-fluidRow(
-    #add in latex functionality if needed
-    withMathJax(),
-          ...
-```
-
 
 ## Other Useful Things  
 
-  - Create "dashboards" with `shinydashboard` package  
-  
-  - Alternatively can use `flexdashboard` (doesn't use bootstrap 3 but css flexbox layout)  
-  
+  - Create "dashboards" with `shinydashboard` or `flexdashboard` packages  
 
-## Other Useful Things  
-
-  - Create "dashboards" with `shinydashboard` package  
-  
-  - Alternatively can use `flexdashboard` (doesn't use bootstrap 3 but css flexbox layout)  
-  
-&nbsp;  &nbsp;    
- 
   - Use mouse over and click inputs    
   - [Click Input Example](http://shiny.stat.ncsu.edu/jbpost2/BasketballCharting)
   
-  
-## Other Useful Things  
-
-  - Create "dashboards" with `shinydashboard` package  
-  
-  - Alternatively can use `flexdashboard` (doesn't use bootstrap 3 but css flexbox layout)  
-  
-&nbsp;  &nbsp;    
- 
-  - Use mouse over and click inputs    
-  - [Click Input Example](http://shiny.stat.ncsu.edu/jbpost2/BasketballCharting)
-  
-&nbsp;  &nbsp;  
-
  - Include Shiny in your Markdown slides!  
  - Use ioslides and add `runtime: shiny`
 
-  
-## Other Useful Things  
-
-  - [shinythemes](https://rstudio.github.io/shinythemes/) are available  
-  - [shinyjs package](https://github.com/daattali/shinyjs) adds more functionality  
-  - List of [all functions](https://shiny.rstudio.com/reference/shiny/latest/) for the UI and server  
-  - Lots of good tutorials!  
-    + See weekly overview  
-  - [R Shiny Cheat Sheet](http://shiny.rstudio.com/images/shiny-cheatsheet.pdf)
 
 
 ## Debugging  
@@ -1637,25 +1544,10 @@ Three major approaches:
   - Click to the left of the line number  
   ![](breakpointExample.PNG)  
 
- > - Now can access values and step through program  
+  - Now can access values and step through program  
 
- > - Can also use browser()
+  - Can also use browser()
   
-## Tracing  
-  - Can run apps in ['showcase mode'](http://shiny.rstudio.com/gallery/kmeans-example.html)      
-  - Invoke your app with the code below  
-  
-```{r,echo=TRUE,eval=FALSE}
-shiny::runApp(app, display.mode="showcase")
-```
-
-  - Also a reactive log that can be viewed  
-  
-## Error Handling  
-  - Check stack trace shiny returns
-
-![](stacktrace.PNG)  
-
 ## Enter Debug Mode on Error  
   - Can make Shiny enter the debugger when an error occurs by using the following statement:  
 

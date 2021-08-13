@@ -1,0 +1,13 @@
+name: example
+title: example
+username:
+account: justinpost
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4488100
+bundleId: 4917987
+url: https://justinpost.shinyapps.io/example/
+when: 1628822666.49329
+lastSyncTime: 1628822666.49329
+asMultiple: FALSE
+asStatic: FALSE

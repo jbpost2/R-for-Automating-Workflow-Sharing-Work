@@ -1,0 +1,20 @@
+---
+title: "Iris Analysis"
+output: html_document
+params: 
+      species: "versicolor"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Quick `iris` analysis
+
+```{r}
+library(tidyverse)
+myIris <- filter(iris, Species == params$species)
+summary(myIris)
+plot(myIris)
+```
+
