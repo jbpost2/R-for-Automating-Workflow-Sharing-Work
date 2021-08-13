@@ -60,10 +60,10 @@ bottom of the page!
     <center>
       <span class="fa-stack fa-4x">
           <i class="fa fa-circle fa-stack-2x text-primary"></i>
-          <a href="https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/slides/shiny.html#1" target = "_blank">
+          <a href="https://shiny.stat.ncsu.edu/jbpost2/RShiny/#1" target = "_blank">
           <i class="fa fa-list fa-stack-1x fa-inverse"></i></a>
       </span>
-      <a href="https://jbpost2.github.io/R-for-Automating-Workflow-Sharing-Work/slides/shiny.html#1" target = "_blank">
+      <a href="https://shiny.stat.ncsu.edu/jbpost2/RShiny/#1" target = "_blank">
         <h4 class="service-heading">R Shiny</h4>
       </a>
       <p class="text-muted">
