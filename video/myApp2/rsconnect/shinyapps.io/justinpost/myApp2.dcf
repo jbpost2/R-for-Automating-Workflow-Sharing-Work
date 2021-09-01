@@ -1,0 +1,13 @@
+name: myApp2
+title: myApp2
+username:
+account: justinpost
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4490579
+bundleId: 4920784
+url: https://justinpost.shinyapps.io/myApp2/
+when: 1628881778.98299
+lastSyncTime: 1628881778.98299
+asMultiple: FALSE
+asStatic: FALSE
